@@ -365,10 +365,9 @@
         height = localcanvas.height = image.naturalHeight || image.offsetHeight || image.height;
         width = localcanvas.width = image.naturalWidth || image.offsetWidth || image.width;
         localcontext.drawImage(image, 0, 0);
-data = localcontext.getImageData(0, 0, width, height);
-        try{
-            console.log("hey");
 
+        try{
+            data = localcontext.getImageData(0, 0, width, height);
         }
         catch(e){
             console.log("hay");
