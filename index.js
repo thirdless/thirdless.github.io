@@ -350,47 +350,6 @@
         root.addEventListener("touchstart", touchstart, {passive: false});
     }
 
-    function averageRGB1(image){
-        let blocksize = 5,
-            localcanvas = createElement("canvas"),
-            localcontext = localcanvas.getContext("2d"),
-            data,
-            width,
-            height,
-            i = -4,
-            length,
-            rgb = {r: 0, g: 0, b: 0},
-            count = 0;
-
-        height = localcanvas.height = image.naturalHeight || image.offsetHeight || image.height;
-        width = localcanvas.width = image.naturalWidth || image.offsetWidth || image.width;
-        localcontext.drawImage(image, 0, 0);
-
-        try{
-            data = localcontext.getImageData(0, 0, width, height);
-        }
-        catch(e){
-            console.log("hay");
-            return rgb;
-        }
-
-        console.log(image, localcanvas, height, width, data);
-
-        length = data.data.length;
-        while((i += blocksize * 4) < length){
-            ++count;
-            rgb.r = data.data[i];
-            rgb.g = data.data[i+1];
-            rgb.b = data.data[i+2];
-        }
-
-        rgb.r = ~~(rgb.r / count);
-        rgb.g = ~~(rgb.g / count);
-        rgb.b = ~~(rgb.b / count);
-
-        return rgb;
-    }
-
     function averageRGB(image){
         let localcanvas = createElement("canvas"),
             localcontext = localcanvas.getContext("2d"),
@@ -1022,7 +981,7 @@
         let average = averageRGB(e.target),
             contrast = contrastRGB(average);
 
-        querySelector(musicdiv, ".main").style.background = "rgb(" + average.r + "," + average.g + "," + average.b + ")";
+        //querySelector(musicdiv, ".main").style.background = "rgb(" + average.r + "," + average.g + "," + average.b + ")";
         if(contrast) musicdiv.classList.add("white");
         else musicdiv.classList.remove("white");
     }
