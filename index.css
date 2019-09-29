@@ -140,7 +140,7 @@ body>.font-div{font-family:sans-serif;}
 
 .music-overlay{z-index:50;position:fixed;top:0;bottom:0;left:0;right:0;background:rgba(0,0,0,.8);}
 .music-div{z-index:51;position:fixed;top:1rem;left:0;right:0;margin:0 auto;width:800px;max-height:100%;color:#111;user-select:none;-ms-user-select:none;-moz-user-select:none;}
-.music-div>.main{position:relative;background:orange;padding:.75rem;box-sizing:border-box;width:100%;border-radius:.2rem .2rem 0 0;overflow:hidden;transition:background .3s cubic-bezier(.4, .3, .2, 1);}
+.music-div>.main{position:relative;background:orange;padding:.75rem;box-sizing:border-box;width:100%;border-radius:.2rem .2rem 0 0;overflow:hidden;transition:.3s cubic-bezier(.4, .3, .2, 1);transition-property:background,color;}
 .music-div>.main::before{content:"";position:absolute;top:0;bottom:0;right:0;left:0;background:linear-gradient(144deg, transparent, rgba(0,0,0,.4));background-size:cover;pointer-events:none;}
 
 .music-div>.main>.backwards,.music-div>.main>.forwards,.music-div>.main>.image,.music-div>.main>.name{position:relative;display:inline-block;vertical-align:middle;z-index:53;}
