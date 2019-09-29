@@ -667,8 +667,7 @@
         homenextcircle.style.animation = "";
         homenextcircle.classList.add("show");
 
-        homenextcircle.offsetWidth;
-        homenextcircle.getBoundingClientRect();
+        slowdom();
 
         homenextinterval = delay(function(){
             e.target.click();
@@ -862,21 +861,19 @@
 
         slowdom();
 
-        //delay(function(){
-            homeelement.classList.add("show");
+        homeelement.classList.add("show");
 
-            home.overlayelement = querySelector(homeelement, ".home-overlay");
-            home.intro = {x: 0, y: 0, z: 0};
-            scrollingframe.addEventListener("scroll", homescroll);
+        home.overlayelement = querySelector(homeelement, ".home-overlay");
+        home.intro = {x: 0, y: 0, z: 0};
+        scrollingframe.addEventListener("scroll", homescroll);
 
-            createhomecanvas();
-            hometransitions();
-            homebindbuttons();
-            homesetskew();
-            homesetnext(querySelector(homeelement, ".next"), 5000);
-            musicinit();
-            showmusicbutton();
-        //});
+        createhomecanvas();
+        hometransitions();
+        homebindbuttons();
+        homesetskew();
+        homesetnext(querySelector(homeelement, ".next"), 5000);
+        musicinit();
+        showmusicbutton();
 
         delay(function(){
             transition = false;
@@ -1004,8 +1001,6 @@
     }
 
     function musicmainimageload(e){
-        querySelector(musicdiv, ".main>.image>.img").classList.add("show");
-
         let average = averageRGB(e.target),
             contrast = contrastRGB(average);
 
@@ -1013,6 +1008,8 @@
         else musicdiv.classList.remove("white");
 
         querySelector(musicdiv, ".main").style.background = "rgb(" + average.r + "," + average.g + "," + average.b + ")";
+        slowdom();
+        querySelector(musicdiv, ".main>.image>.img").classList.add("show");
     }
 
     function musicplayerdata(){
@@ -1187,8 +1184,7 @@
         musicplayerdata();
 
         querySelector(musicdiv, ".close").addEventListener("click", musicclose);
-        root.offsetWidth;
-        root.getBoundingClientRect();
+        slowdom();
 
         musicdiv.classList.add("show");
         overlay.classList.add("show");
