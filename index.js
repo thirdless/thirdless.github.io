@@ -898,10 +898,10 @@
     }
 
     function createWork(){}
-    function destroyWork(){}
+    function destroyWork(){console.log("wtf")}
 
     function create404(){createHome();}
-    function destroy404(){destroyHome();}
+    function destroy404(){console.log("lol");destroyHome();}
 
 
     // music functions
