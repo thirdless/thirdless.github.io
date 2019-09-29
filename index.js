@@ -966,6 +966,7 @@
             `;
 
             musiclistimages.push([new Image(), div]);
+            musiclistimages[i][0].crossOrigin = "anonymous";
             musiclistimages[i][0].addEventListener("load", musiclistimageload);
             musiclistimages[i][0].src = songs[i].pic;
 
@@ -1012,7 +1013,7 @@
 
             musicmainimage = new Image();
             musicmainimage.addEventListener("load", musicmainimageload);
-            //musicmainimage.crossOrigin = "anonymous";
+            musicmainimage.crossOrigin = "anonymous";
             musicmainimage.src = song.pic;
         }
     }
