@@ -668,7 +668,7 @@
         homenextcircle.style.animation = "";
         homenextcircle.classList.add("show");
 
-        slowdom(homenextcircle);
+        slowdom();
 
         homenextinterval = delay(function(){
             e.target.click();
