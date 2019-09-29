@@ -408,6 +408,10 @@
             rgb.b += data[i+2];
         }
 
+        rgb.r = Math.floor(rgb.r / (data.length / 4));
+        rgb.g = Math.floor(rgb.g / (data.length / 4));
+        rgb.b = Math.floor(rgb.b / (data.length / 4));
+
         return rgb;
     }
 
