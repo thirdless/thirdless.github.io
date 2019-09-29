@@ -898,10 +898,10 @@
     }
 
     function createWork(){}
-    function destroyWork(){console.log("wtf")}
+    function destroyWork(){}
 
     function create404(){createHome();}
-    function destroy404(){console.log("lol");destroyHome();}
+    function destroy404(){destroyHome();}
 
 
     // music functions
@@ -1289,7 +1289,7 @@
 
         if(!status.toString().indexOf(projectstring)) destroyProject();
         else for(let i = 0; i < pages.length; i++){
-            if(next.status === pages[i].status && pages[i].destroy) pages[i].destroy();
+            if(status === pages[i].status && pages[i].destroy) pages[i].destroy();
         }
 
         delay(function(){
