@@ -115,6 +115,7 @@
     function slowdom(el){
         if(!el) el = root;
         el.offsetWidth;
+        el.getBoundingClientRect();
     }
 
     function delay(func, timeout){
