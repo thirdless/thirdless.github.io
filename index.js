@@ -1029,6 +1029,7 @@ data = localcontext.getImageData(0, 0, width, height);
             `;
 
             musicmainimage = new Image();
+            musicmainimage.crossOrigin = "Anonymous";
             musicmainimage.addEventListener("load", musicmainimageload);
             musicmainimage.src = song.pic;
         }
