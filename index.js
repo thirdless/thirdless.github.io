@@ -428,7 +428,7 @@
     }
 
     function homemove(){
-        let center = -(home.mouse.x - home.width / 2),
+        let center = -(home.mouse.x - canvaswidth / 2),
             formula = (center / 400).toFixed(5),
             temp = parseFloat(((formula - home.intropos) / 5).toFixed(5));
 
@@ -551,18 +551,27 @@
         home.increment++;
     }
 
-    function createhomecanvas(){
+    function homecanvasresize(){
+        for(let i = 0; i < homecircles.length; i++){
+            homecircles[i].position.x = (homecircles[i].position.x * canvaswidth) / home.lastwidth;
+            homecircles[i].position.y = (homecircles[i].position.y * canvasheight) / home.lastheight;
+            homecircles[i].size = (homecircles[i].size * canvaswidth) / home.lastwidth;
+        }
+        home.lastwidth = canvaswidth;
+        home.lastheight = canvasheight;
+    }
 
-        home.width = canvaswidth;
-        home.height = canvasheight;
-        home.factor = (home.width / 1080) * 250;
-        home.medianw = home.width / homedensity;
-        home.medianh = home.height / homedensity;
+    function createhomecanvas(){
+        home.lastwidth = canvaswidth;
+        home.lastheight = canvasheight;
+        home.factor = (canvaswidth / 1080) * 250;
+        home.medianw = canvaswidth / homedensity;
+        home.medianh = canvasheight / homedensity;
         home.increment = 0;
         home.usedmedian = [];
         home.opacity = 0;
         home.position = {x: 0, y: 0};
-        home.entereffect = home.height * .3;
+        home.entereffect = canvasheight * .3;
 
         home.intropos = 0;
         home.introopacity = 0;
@@ -575,10 +584,12 @@
         for(let i = 0; i < homedensity; i++) homecircles.push(new homecircle());
         homerender();
         homeelement.addEventListener("mousemove", homemouse);
-
+        window.addEventListener("resize", homecanvasresize);
     }
 
     function deletehomecanvas(){
+        window.removeEventListener("resize", homecanvasresize);
+
         home.enter = false;
         home.leave = true;
         home.moveactive = false;
@@ -594,7 +605,7 @@
         return `<div class="${classname}" ${datahref ? 'data-href="' + datahref + '"' : ""}><span>${name}</span></div>`;
     }
 
-    function createlines(text, div){
+    function createlines(text, div, resize){
         let words = text.split(" "),
             lines = [],
             textheight;
@@ -616,17 +627,17 @@
             let starttext = i === 0 ? 0 : lines[i - 1] + 1,
                 endtext = i === lines.length - 1 ? text.length : lines[i],
                 el = createElement();
-            el.className = "line";
+            el.className = (resize ? "line show" : "line");
             el.innerHTML = "<span>" + text.substring(starttext, endtext) + "</span>";
             div.appendChild(el);
         }
         div.style.visibility = "";
     }
 
-    function homeaboutlines(text1, text2, el){
+    function homeaboutlines(text1, text2, el, resize){
         if(el.length === 2){
-            createlines(text1, el[0]);
-            createlines(text2, el[1]);
+            createlines(text1, el[0], resize);
+            createlines(text2, el[1], resize);
         }
     }
 
@@ -719,8 +730,8 @@
         }
     }
 
-    let introlinestimeouts = [],
-        scrolldivs = [],
+    let introlinestimeouts,
+        scrolldivs,
         homedivs;
 
     function homedivsscroll(){
@@ -739,6 +750,9 @@
     function hometransitions(){
         let sec = ".secondary ",
             introlines = querySelectorAll(homeelement, ".intro .line");
+
+        introlinestimeouts = [];
+        scrolldivs = [];
 
         homedivs = {
             links: querySelector(homeelement, sec + ".links"),
@@ -771,6 +785,22 @@
         skillsspan.style.transitionDelay = text;
         skillsh2.style.transitionDelay = text;
     }
+
+    let homeresizetimeout;
+
+    function homelinesresize(){
+        if(typeof homeresizetimeout !== "undefined") clearTimeout(homeresizetimeout);
+        homeresizetimeout = delay(function(){
+            createlines(hometext, querySelector(homeelement, ".text"), true);
+            homeaboutlines(hometext1, hometext2, querySelectorAll(homeelement, ".secondary .desc p"), true);
+            homeresizetimeout = undefined;
+        }, 500);
+        homesetskew();
+    }
+
+    let hometext = "I'm Ioan, a student living in Romania. Mostly doing programming, listening to music, gaming and whatnot. Huge technology and bass addict, messing with different aspects of programming and design, working with efficiency and minimalism in mind.",
+        hometext1 = "Hi there, I'm Ioan, a 18 year old \"Automatic Control and Computer Engineering\" student based in Romania. Mostly focusing on front end developing, but also on back end, software, servers, networking and occasionally working on some small open-source libraries and other \"for-fun\" projects.",
+        hometext2 = "Even though I'm a little bit lazy, I like to be competitive sometimes and that pretty much summaries my taste of activities. Tending to listen to music everytime I do something, I don't have a preffered genre, but the most of my favorites are rock and electronic - EDM, Trap, DnB, whatever.";
 
     function createHome(){
         let content = `
@@ -844,18 +874,17 @@
                     My work. ${svg("nextarrow")}
                   </div>
                 </div>
-                `,
-            text = "I'm Ioan, a student living in Romania. Mostly doing programming, listening to music, gaming and whatnot. Huge technology and bass addict, messing with different aspects of programming and design, working with efficiency and minimalism in mind.",
-            text1 = "Hi there, I'm Ioan, a 18 year old \"Automatic Control and Computer Engineering\" student based in Romania. Mostly focusing on front end developing, but also on back end, software, servers, networking and occasionally working on some small open-source libraries and other \"for-fun\" projects.",
-            text2 = "Even though I'm a little bit lazy, I like to be competitive sometimes and that pretty much summaries my taste of activities. Tending to listen to music everytime I do something, I don't have a preffered genre, but the most of my favorites are rock and electronic - EDM, Trap, DnB, whatever.";
+                `;
 
         homeelement = createElement();
         homeelement.className = "home";
         homeelement.innerHTML = content;
         root.appendChild(homeelement);
 
-        createlines(text, querySelector(homeelement, ".text"));
-        homeaboutlines(text1, text2, querySelectorAll(homeelement, ".secondary .desc p"));
+        createlines(hometext, querySelector(homeelement, ".text"));
+        homeaboutlines(hometext1, hometext2, querySelectorAll(homeelement, ".secondary .desc p"));
+
+        window.addEventListener("resize", homelinesresize);
 
         home.mouse = {x: 0, y: 0};
         home.introdiv = querySelector(homeelement, ".intro>div");
@@ -887,6 +916,8 @@
 
     function destroyHome(){
         homenextstop();
+        if(typeof homeresizetimeout !== "undefined") clearTimeout(homeresizetimeout);
+        window.removeEventListener("resize", homelinesresize);
 
         homeelement.classList.remove("show");
         homeelement.classList.add("hide");
@@ -956,7 +987,10 @@
 
     function musiclistimageload(e){
         for(let i = 0; i < musiclistimages.length; i++){
-            if(e.target === musiclistimages[i][0]) querySelector(musiclistimages[i][1], ".image").classList.add("show");
+            if(e.target === musiclistimages[i][0]){
+                slowdom(e.target);
+                querySelector(musiclistimages[i][1], ".image").classList.add("show");
+            }
         }
     }
 
