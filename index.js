@@ -1006,6 +1006,7 @@
     }
 
     function musicmainimageload(e){
+        slowdom(e.target);
         let average = averageRGB(e.target),
             contrast = contrastRGB(average);
 
@@ -1014,7 +1015,6 @@
 
         querySelector(musicdiv, ".main").style.background = "rgb(" + average.r + "," + average.g + "," + average.b + ")";
         slowdom(e.target);
-        debugger;
         querySelector(musicdiv, ".main>.image>.img").classList.add("show");
     }
 
