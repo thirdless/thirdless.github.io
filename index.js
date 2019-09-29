@@ -112,6 +112,11 @@
         return document.createElement(param);
     }
 
+    function slowdom(){
+        root.offsetWidth;
+        root.getBoundingClientRect();
+    }
+
     function delay(func, timeout){
         timeout = timeout || 0;
         return setTimeout(func, timeout);
@@ -222,10 +227,8 @@
         document.body.appendChild(loadingdiv);
         loadingtimeout = delay(function(){
             loadingtimeout = undefined;
-            delay(function(){
-                loadingdiv.classList.add("show");
-                loadingtime = performance.now();
-            });
+            loadingdiv.classList.add("show");
+            loadingtime = performance.now();
         }, 400);
     }
 
@@ -857,7 +860,9 @@
         home.mouse = {x: 0, y: 0};
         home.introdiv = querySelector(homeelement, ".intro>div");
 
-        delay(function(){
+        slowdom();
+
+        //delay(function(){
             homeelement.classList.add("show");
 
             home.overlayelement = querySelector(homeelement, ".home-overlay");
@@ -871,7 +876,7 @@
             homesetnext(querySelector(homeelement, ".next"), 5000);
             musicinit();
             showmusicbutton();
-        });
+        //});
 
         delay(function(){
             transition = false;
@@ -1264,15 +1269,13 @@
         else if(loading !== false) createLoading();
 
         transition = true;
-
         scrollingelement.scrollTop = 0;
+        status = next.status;
 
         if(!next.status.toString().indexOf(projectstring)) createProject(next.status);
         else for(let i = 0; i < pages.length; i++){
             if(next.status === pages[i].status && pages[i].create) pages[i].create();
         }
-
-        status = next.status;
 
         if(!pushstate) history.pushState({location: next.url}, null, next.url);
 
