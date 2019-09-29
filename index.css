@@ -135,19 +135,23 @@ body>.font-div{font-family:sans-serif;}
 
 @keyframes progress{0%{stroke-dashoffset:var(--stroke-length);}100%{stroke-dashoffset:0;}}
 
+.music-overlay,.music-div{transition:opacity .3s cubic-bezier(.4, .3, .2, 1);opacity:0;}
+.music-overlay.show,.music-div.show{opacity:1;}
+
 .music-overlay{z-index:50;position:fixed;top:0;bottom:0;left:0;right:0;background:rgba(0,0,0,.8);}
 .music-div{z-index:51;position:fixed;top:1rem;left:0;right:0;margin:0 auto;width:800px;max-height:100%;color:#111;user-select:none;-ms-user-select:none;-moz-user-select:none;}
-.music-div>.main{position:relative;background:orange;padding:.75rem;box-sizing:border-box;width:100%;border-radius:.2rem .2rem 0 0;}
+.music-div>.main{position:relative;background:orange;padding:.75rem;box-sizing:border-box;width:100%;border-radius:.2rem .2rem 0 0;overflow:hidden;transition:background .3s cubic-bezier(.4, .3, .2, 1);}
 .music-div>.main::before{content:"";position:absolute;top:0;bottom:0;right:0;left:0;background:linear-gradient(144deg, transparent, rgba(0,0,0,.4));background-size:cover;pointer-events:none;}
 
-.music-div>.main>.backwards,.music-div>.main>.forwards,.music-div>.main>.image,.music-div>.main>.name{display:inline-block;vertical-align:middle;z-index:53;}
+.music-div>.main>.backwards,.music-div>.main>.forwards,.music-div>.main>.image,.music-div>.main>.name{position:relative;display:inline-block;vertical-align:middle;z-index:53;}
 
 .music-div.white>.main{color:#eee;}
 
 .music-div>.main>.backwards,.music-div>.main>.forwards{height:100%;width:1rem;cursor:pointer;}
+.music-div>.main>.backwards.disabled,.music-div>.main>.forwards.disabled{pointer-events:none;opacity:.4;}
 .music-div>.main>.image{height:3rem;width:3rem;position:relative;border-radius:.5rem;overflow:hidden;}
-.music-div>.main>.image>.img{z-index:2;position:absolute;top:0;left:0;right:0;bottom:0;background-size:cover;transition:opacity .3s cubic-bezier(.4, .3, .2, 1);opacity:0;}
-.music-div>.main>.image>.img.show{opacity:1;}
+.music-div>.main>.image>.img{z-index:2;position:absolute;top:0;left:0;right:0;bottom:0;background-size:cover;opacity:0;}
+.music-div>.main>.image>.img.show{opacity:1;transition:opacity .3s cubic-bezier(.4, .3, .2, 1);}
 .music-div>.main>.image>.play{position:absolute;top:50%;left:50%;width:70%;height:70%;padding:10%;box-sizing:border-box;transform:translate(-50%,-50%);z-index:3;background:orange;border-radius:50%;overflow:hidden;cursor:pointer;opacity:0;transition:opacity .2s cubic-bezier(.4, .3, .2, 1);}
 .music-div>.main>.image>.play::before{content:"";position:absolute;top:0;left:0;right:0;bottom:0;z-index:0;background:linear-gradient(144deg, transparent, rgba(0,0,0,.2));background-size:cover;}
 .music-div>.main>.image>.play>svg{position:absolute;top:50%;left:50%;width:50%;height:50%;transform:translate(-50%,-50%);}
@@ -172,16 +176,5 @@ body>.font-div{font-family:sans-serif;}
 .music-div>.list::-webkit-scrollbar{width:7px;}
 .music-div>.list::-webkit-scrollbar-track{background:none;}
 .music-div>.list::-webkit-scrollbar-thumb{background:#eee;border-radius:3px;}
-/*.music-div>.main>.backwards,.music-div>.main>.forwards{height:100%;width:1rem;display:inline-block;vertical-align:middle;}
-.music-div>.main>.image{height:3rem;width:3rem;position:relative;display:inline-block;vertical-align:middle;}
-.music-div>.main>.image>.img{z-index:2;position:absolute;top:0;left:0;right:0;bottom:0;background-size:cover;transition:opacity .3s cubic-bezier(.4, .3, .2, 1);opacity:0;}
-.music-div>.main>.image>.img.show{opacity:1;}
-.music-div>.main>.image>.play{position:absolute;top:50%;left:50%;width:70%;height:70%;padding:10%;box-sizing:border-box;transform:translate(-50%,-50%);z-index:3;background:orange;border-radius:50%;}
-.music-div>.main>.image>.play>svg{width:100%;height:100%;}
-.music-div>.main>.name{display:inline-block;vertical-align:middle;width:auto;padding-left:.5rem;}
-.music-div>.main>.name>*{display:block;font-weight:bold;max-width:100%;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;padding-bottom:.1rem;}
-.music-div>.main>.name>.title{font-size:.7rem;}
-.music-div>.main>.name>.artist{font-size:.6rem;}
-.music-div>.main>.name>.time{font-size:.5rem;opacity:.8;}
-.music-div>.main>.progress{position:absolute;bottom:0;left:0;right:0;}
-.music-div>.list{padding:1rem;overflow:auto;}*/
+
+.music-div>.close{position:absolute;left:100%;padding-left:.5rem;color:#eee;width:1.5rem;height:1.5rem;cursor:pointer;}
