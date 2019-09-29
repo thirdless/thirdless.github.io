@@ -150,7 +150,7 @@ body>.font-div{font-family:sans-serif;}
 .music-div>.main>.backwards,.music-div>.main>.forwards{height:100%;width:1rem;cursor:pointer;}
 .music-div>.main>.backwards.disabled,.music-div>.main>.forwards.disabled{pointer-events:none;opacity:.4;}
 .music-div>.main>.image{height:3rem;width:3rem;position:relative;border-radius:.5rem;overflow:hidden;}
-.music-div>.main>.image>.img{z-index:2;position:absolute;top:0;left:0;right:0;bottom:0;background-size:cover;opacity:0.05;}
+.music-div>.main>.image>.img{z-index:2;position:absolute;top:0;left:0;right:0;bottom:0;background-size:cover;opacity:0.01;}
 .music-div>.main>.image>.img.show{opacity:1;transition:opacity .3s cubic-bezier(.4, .3, .2, 1);}
 .music-div>.main>.image>.play{position:absolute;top:50%;left:50%;width:70%;height:70%;padding:10%;box-sizing:border-box;transform:translate(-50%,-50%);z-index:3;background:orange;border-radius:50%;overflow:hidden;cursor:pointer;opacity:0;transition:opacity .2s cubic-bezier(.4, .3, .2, 1);}
 .music-div>.main>.image>.play::before{content:"";position:absolute;top:0;left:0;right:0;bottom:0;z-index:0;background:linear-gradient(144deg, transparent, rgba(0,0,0,.2));background-size:cover;}
@@ -166,7 +166,7 @@ body>.font-div{font-family:sans-serif;}
 .music-div>.list{width:100%;height:calc(100vh - 6.5rem);background:#111;color:#eee;padding:.5rem;box-sizing:border-box;overflow:auto;border-radius:0 0 .2rem .2rem;}
 .music-div>.list>.song{padding:.5rem;position:relative;transition:background .3s cubic-bezier(.4, .3, .2, 1);cursor:pointer;border-radius:.1rem;}
 .music-div>.list>.song:hover,.music-div>.list>.song.active{background:rgba(255,255,255,.2);}
-.music-div>.list>.song>.image{height:2rem;width:2rem;background-size:cover;border-radius:.3rem;opacity:0.05;transition:opacity .3s cubic-bezier(.4, .3, .2, 1);}
+.music-div>.list>.song>.image{height:2rem;width:2rem;background-size:cover;border-radius:.3rem;opacity:0.01;transition:opacity .3s cubic-bezier(.4, .3, .2, 1);}
 .music-div>.list>.song>.image.show{opacity:1;}
 .music-div>.list>.song>.name{font-weight:bold;position:absolute;left:3rem;top:50%;right:.5rem;transform:translate(0,-50%);}
 .music-div>.list>.song>.name>*{display:block;overflow:hidden;text-overflow:ellipsis;max-width:100%;white-space:nowrap;}
