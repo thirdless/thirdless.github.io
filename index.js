@@ -350,7 +350,7 @@
         root.addEventListener("touchstart", touchstart, {passive: false});
     }
 
-    function averageRGB(image){
+    function averageRGB1(image){
         let blocksize = 5,
             localcanvas = createElement("canvas"),
             localcontext = localcanvas.getContext("2d"),
@@ -387,6 +387,26 @@
         rgb.r = ~~(rgb.r / count);
         rgb.g = ~~(rgb.g / count);
         rgb.b = ~~(rgb.b / count);
+
+        return rgb;
+    }
+
+    function averageRGB(image){
+        let localcanvas = createElement("canvas"),
+            localcontext = localcanvas.getContext("2d"),
+            width = localcanvas.width = image.naturalWidth,
+            height = localcanvas.height = image.naturalHeight,
+            data,
+            rgb = {r: 0, g: 0, b: 0};
+
+        localcontext.drawImage(image, 0, 0);
+        data = localcontext.getImageData(0, 0, width, height).data;
+
+        for(let i = 0; i < data.length; i += 4){
+            rgb.r += data[i];
+            rgb.g += data[i+1];
+            rgb.b += data[i+2];
+        }
 
         return rgb;
     }
