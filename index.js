@@ -848,36 +848,42 @@
             text1 = "Hi there, I'm Ioan, a 18 year old \"Automatic Control and Computer Engineering\" student based in Romania. Mostly focusing on front end developing, but also on back end, software, servers, networking and occasionally working on some small open-source libraries and other \"for-fun\" projects.",
             text2 = "Even though I'm a little bit lazy, I like to be competitive sometimes and that pretty much summaries my taste of activities. Tending to listen to music everytime I do something, I don't have a preffered genre, but the most of my favorites are rock and electronic - EDM, Trap, DnB, whatever.";
 
-        homeelement = createElement();
-        homeelement.className = "home";
-        homeelement.innerHTML = content;
-        root.appendChild(homeelement);
+            homeelement = createElement();
+            homeelement.className = "home";
+            homeelement.innerHTML = content;
+            root.appendChild(homeelement);
 
-        createlines(text, querySelector(homeelement, ".text"));
-        homeaboutlines(text1, text2, querySelectorAll(homeelement, ".secondary .desc p"));
+            createlines(text, querySelector(homeelement, ".text"));
+            homeaboutlines(text1, text2, querySelectorAll(homeelement, ".secondary .desc p"));
 
-        home.mouse = {x: 0, y: 0};
-        home.introdiv = querySelector(homeelement, ".intro>div");
+            home.mouse = {x: 0, y: 0};
+            home.introdiv = querySelector(homeelement, ".intro>div");
 
-        slowdom();
+            slowdom();
 
-        homeelement.classList.add("show");
+        deleteLoading(function(){
 
-        home.overlayelement = querySelector(homeelement, ".home-overlay");
-        home.intro = {x: 0, y: 0, z: 0};
-        scrollingframe.addEventListener("scroll", homescroll);
 
-        createhomecanvas();
-        hometransitions();
-        homebindbuttons();
-        homesetskew();
-        homesetnext(querySelector(homeelement, ".next"), 5000);
-        musicinit();
-        showmusicbutton();
 
-        delay(function(){
-            transition = false;
-        }, transtime);
+            homeelement.classList.add("show");
+
+            home.overlayelement = querySelector(homeelement, ".home-overlay");
+            home.intro = {x: 0, y: 0, z: 0};
+            scrollingframe.addEventListener("scroll", homescroll);
+
+            createhomecanvas();
+            hometransitions();
+            homebindbuttons();
+            homesetskew();
+            homesetnext(querySelector(homeelement, ".next"), 5000);
+            musicinit();
+            showmusicbutton();
+
+            delay(function(){
+                transition = false;
+            }, transtime);
+
+        });
     }
 
     function destroyHome(){
@@ -1430,15 +1436,13 @@
             history.scrollRestoration = "manual";
         }
 
-        deleteLoading(function(){
-            scrollingelement = document.scrollingElement || document.documentElement;
-            scrollingframe = window;
+        scrollingelement = document.scrollingElement || document.documentElement;
+        scrollingframe = window;
 
-            smoothscroll(scrollingelement, 70, 10);
-            touchenable();
+        smoothscroll(scrollingelement, 70, 10);
+        touchenable();
 
-            if(!navigated) changestatus(false);
-        });
+        if(!navigated) changestatus(false);
     }
 
     function checkpagequery(){
