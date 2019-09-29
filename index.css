@@ -180,6 +180,7 @@ body>.font-div{font-family:sans-serif;}
 .music-div>.close{position:absolute;left:100%;padding-left:.5rem;color:#eee;width:1.5rem;height:1.5rem;cursor:pointer;}
 
 @media screen and (max-width:900px){
+    .home>.main>.intro{width:95vw;}
     .home>.main>.intro .text{font-size:1.2rem;}
     .home>.main>.intro .header{height:1.5rem;font-size:.75rem;}
     .main>.intro .header>.logo{width:calc(1.5rem * var(--logo-ratio))}
