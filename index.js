@@ -215,7 +215,7 @@
         loadingdiv = createElement();
         loadingdiv.innerHTML = "<div></div>";
         loadingdiv.className = "-loading overlay";
-        document.body.appendChild(loadingdiv);
+        body.appendChild(loadingdiv);
         loadingtimeout = delay(function(){
             loadingtimeout = undefined;
             delay(function(){
@@ -226,7 +226,7 @@
     }
 
     function destroyLoading(){
-        if(loadingdiv.parentNode === document.body) document.body.removeChild(loadingdiv);
+        if(loadingdiv.parentNode === body) body.removeChild(loadingdiv);
         loadingtimeout = undefined;
         loadingdiv = undefined;
         loadingtime = undefined;
@@ -343,7 +343,7 @@
     }
 
     function touchstart(){
-        document.body.style.overflow = "initial";
+        body.style.overflow = "initial";
     }
 
     function touchenable(){
@@ -388,6 +388,7 @@
         projectpath = "/project/",
         transtime = 600,
 
+        body,
         root,
         canvas,
         context,
@@ -663,7 +664,7 @@
         homenextcircle.offsetWidth;
         homenextcircle.getBoundingClientRect();
 
-        homenextinterval = setTimeout(function(){
+        homenextinterval = delay(function(){
             e.target.click();
         }, homenexttime);
 
@@ -982,9 +983,17 @@
         let average = averageRGB(e.target),
             contrast = contrastRGB(average);
 
-        querySelector(musicdiv, ".main").style.background = "rgb(" + average.r + "," + average.g + "," + average.b + ")";
         if(contrast) musicdiv.classList.add("white");
         else musicdiv.classList.remove("white");
+
+        querySelector(musicdiv, ".main").style.background = "rgb(" + average.r + "," + average.g + "," + average.b + ")";
+        let removable = querySelectorAll(musicdiv, ".main>.bg");
+        for(let i = 0; i < removable.length; i++){
+            removable[i].classList.remove("hide");
+            delay(function(){
+                removable[i].parentNode.removeChild(removable[i]);
+            }, 400);
+        }
     }
 
     function musicplayerdata(){
@@ -1128,8 +1137,8 @@
             </div>
         `;
 
-        document.body.appendChild(overlay);
-        document.body.appendChild(div);
+        body.appendChild(overlay);
+        body.appendChild(div);
 
         musicbuttons.play = querySelector(div, ".image .play");
         musicbuttons.back = querySelector(div, ".backwards");
@@ -1368,6 +1377,7 @@
         root = $("body>.root")[0];
         canvas = createElement("canvas");
         context = canvas.getContext("2d");
+        body = document.body;
 
         canvasresize();
 
