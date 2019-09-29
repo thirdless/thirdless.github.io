@@ -90,6 +90,10 @@
         shuffle: {
             view: "0 0 32 32",
             path: '<path d="M24 22h-3.172l-5-5 5-5h3.172v5l7-7-7-7v5h-4c-0.53 0-1.039 0.211-1.414 0.586l-5.586 5.586-5.586-5.586c-0.375-0.375-0.884-0.586-1.414-0.586h-6v4h5.172l5 5-5 5h-5.172v4h6c0.53 0 1.039-0.211 1.414-0.586l5.586-5.586 5.586 5.586c0.375 0.375 0.884 0.586 1.414 0.586h4v5l7-7-7-7v5z"></path>'
+        },
+        close: {
+            view: "0 0 24 24",
+            path: '<path d="M18.984 6.422l-5.578 5.578 5.578 5.578-1.406 1.406-5.578-5.578-5.578 5.578-1.406-1.406 5.578-5.578-5.578-5.578 1.406-1.406 5.578 5.578 5.578-5.578z"></path>'
         }
     };
 
@@ -910,6 +914,7 @@
     },
         musicopened = false,
         musicdiv,
+        musicoverlay,
         musicbuttons = {},
         musicobject,
         musicinitialized,
@@ -928,7 +933,7 @@
 
     //NOTE change from 404 to home
     function showmusicbutton(){
-        if(status === 404){
+        if(status === "home" || status === 404){
             querySelector(homeelement, ".header .music").classList.add("show");
             querySelector(homeelement, ".header .music-sep").classList.add("show");
             querySelector(homeelement, ".header .music").addEventListener("click", musicopen);
@@ -945,6 +950,23 @@
     function musiclistimageload(e){
         for(let i = 0; i < musiclistimages.length; i++){
             if(e.target === musiclistimages[i][0]) querySelector(musiclistimages[i][1], ".image").classList.add("show");
+        }
+    }
+
+    function musiclistclick(e){
+        let songs = [].slice.call(querySelectorAll(musicdiv, ".list .song")),
+            target = e.target;
+
+        while(true){
+            if(target === e.currentTarget) return;
+            else if(target.classList.contains("song")) break;
+            target = target.parentNode;
+        }
+
+        let index = songs.indexOf(target);
+        if(~index){
+            musicchange(index);
+            musictoggle(1);
         }
     }
 
@@ -972,11 +994,11 @@
 
             list.appendChild(div);
         }
+
+        list.addEventListener("click", musiclistclick);
     }
 
     function musicmainimageload(e){
-        root.offsetWidth;
-        root.getBoundingClientRect();
         querySelector(musicdiv, ".main>.image>.img").classList.add("show");
 
         let average = averageRGB(e.target),
@@ -986,13 +1008,6 @@
         else musicdiv.classList.remove("white");
 
         querySelector(musicdiv, ".main").style.background = "rgb(" + average.r + "," + average.g + "," + average.b + ")";
-        let removable = querySelectorAll(musicdiv, ".main>.bg");
-        for(let i = 0; i < removable.length; i++){
-            removable[i].classList.remove("hide");
-            delay(function(){
-                removable[i].parentNode.removeChild(removable[i]);
-            }, 400);
-        }
     }
 
     function musicplayerdata(){
@@ -1004,11 +1019,11 @@
         if(musicopened){
             let song = musicsettings.songlist[musicsettings.songplaying];
 
-            if(!musicstatus.backbutton) musicbuttons.back.classList.add("disable");
-            else musicbuttons.back.classList.remove("disable");
+            if(!musicstatus.backbutton) musicbuttons.back.classList.add("disabled");
+            else musicbuttons.back.classList.remove("disabled");
 
-            if(!musicstatus.forthbutton) musicbuttons.forth.classList.add("disable");
-            else musicbuttons.forth.classList.remove("disable");
+            if(!musicstatus.forthbutton) musicbuttons.forth.classList.add("disabled");
+            else musicbuttons.forth.classList.remove("disabled");
 
             querySelector(musicdiv, ".main>.image>.img").classList.remove("show");
             querySelector(musicdiv, ".main>.image>.img").style.backgroundImage = "url(" + song.pic + ")";
@@ -1023,6 +1038,14 @@
             musicmainimage.addEventListener("load", musicmainimageload);
             musicmainimage.crossOrigin = "anonymous";
             musicmainimage.src = song.pic;
+
+            let songslist = querySelectorAll(musicdiv, ".list .song");
+            for(let i = 0; i < songslist.length; i++){
+                songslist[i].classList.remove("active");
+            }
+            songslist[musicsettings.songplaying].classList.add("active");
+
+            musicplayerplay();
         }
     }
 
@@ -1088,7 +1111,7 @@
         else current = songindex;
 
         if(current < 0) current = 0;
-        else if(current >= musicsettings.songlist.length) current = musicsettings.songlist.length;
+        else if(current + 1 >= musicsettings.songlist.length) current = musicsettings.songlist.length - 1;
 
         if(musicsettings.songplaying == current) return;
 
@@ -1104,17 +1127,32 @@
         else if(e.currentTarget === musicbuttons.forth) musicchange(null, 1);
     }
 
+    function musicclose(e){
+        e.currentTarget.removeEventListener("click", musicclose);
+        musicdiv.classList.remove("show");
+        musicoverlay.classList.remove("show");
+        delay(function(){
+            musicdiv.parentNode.removeChild(musicdiv);
+            musicoverlay.parentNode.removeChild(musicoverlay);
+            musicopened = false;
+        }, 400);
+    }
+
     function musicopen(){
+        if(musicopened) return;
+
         let overlay = createElement(),
             div = createElement();
 
         musicdiv = div;
+        musicoverlay = overlay;
         musiclistimages = [];
 
         overlay.className = "music-overlay";
         div.className = "music-div";
 
         div.innerHTML = `
+            <div class="close">${svg("close")}</div>
             <div class="main">
                 <div class="backwards">${svg("musicback")}</div>
                 <div class="image">
@@ -1125,15 +1163,7 @@
                 <div class="name"></div>
                 <div class="progress"></div>
             </div>
-            <div class="list">
-                <div class="song">
-                    <div class="image" style="background-image:url(testimage.jpg)"></div>
-                    <div class="name">
-                        <div class="title">#PROUDCATOWNERREMIXTESTTESTUYSGDHASJKDNLASNDLKASHLDKASHLDHASLDHASKJLDHAKJDHA</div>
-                        <div class="artist">XXXTENTACION, Rico Nasty</div>
-                    </div>
-                </div>
-            </div>
+            <div class="list"></div>
         `;
 
         document.body.appendChild(overlay);
@@ -1150,6 +1180,13 @@
         musicopened = 1;
         musicupdatelist();
         musicplayerdata();
+
+        querySelector(musicdiv, ".close").addEventListener("click", musicclose);
+        root.offsetWidth;
+        root.getBoundingClientRect();
+
+        musicdiv.classList.add("show");
+        overlay.classList.add("show");
     }
 
     function musicparse(){
