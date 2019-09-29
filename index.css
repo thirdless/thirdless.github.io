@@ -180,15 +180,15 @@ body>.font-div{font-family:sans-serif;}
 .music-div>.close{position:absolute;left:100%;padding-left:.5rem;color:#eee;width:1.5rem;height:1.5rem;cursor:pointer;}
 
 @media screen and (max-width:900px){
-    .home>.main>.intro{width:95vw;}
+    .home>.main>.intro{width:85vw;}
     .home>.main>.intro .text{font-size:1.2rem;}
     .home>.main>.intro .header{height:1.5rem;font-size:.75rem;}
     .main>.intro .header>.logo{width:calc(1.5rem * var(--logo-ratio))}
     .home>.secondary>.links>div{width:2.5rem;}
     .home>.secondary{padding:2rem 5vw;}
-    .home>.secondary>.desc{font-size:1.1rem;}
+    .home>.secondary>.desc{font-size:1.1rem;margin:0 5vw;}
     .home>.secondary>.desc p{width:90%;}
-    .home>.secondary>.skills{margin:1rem auto;}
+    .home>.secondary>.skills{width:90%;}
     .home>.secondary>.skills>h1{font-size:1.3rem;}
     .home>.secondary>.skills>div>p{font-size:.9rem;}
     .home>.secondary>.skills>h2{font-size:.7rem;}
