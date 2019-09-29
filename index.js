@@ -795,7 +795,13 @@
             homeaboutlines(hometext1, hometext2, querySelectorAll(homeelement, ".secondary .desc p"), true);
             homeresizetimeout = undefined;
         }, 500);
+
         homesetskew();
+
+        for(let i = 0; i < scrolldivs.length; i++){
+            scrolldivs[i].top = scrolldivs[i].el.getBoundingClientRect().top;
+            scrolldivs[i].height = scrolldivs[i].el.offsetHeight;
+        }
     }
 
     let hometext = "I'm Ioan, a student living in Romania. Mostly doing programming, listening to music, gaming and whatnot. Huge technology and bass addict, messing with different aspects of programming and design, working with efficiency and minimalism in mind.",
