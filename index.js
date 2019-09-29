@@ -1012,7 +1012,7 @@
 
             musicmainimage = new Image();
             musicmainimage.addEventListener("load", musicmainimageload);
-            musicmainimage.crossOrigin = "anonymous";
+            //musicmainimage.crossOrigin = "anonymous";
             musicmainimage.src = song.pic;
         }
     }
