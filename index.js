@@ -215,7 +215,7 @@
         loadingdiv = createElement();
         loadingdiv.innerHTML = "<div></div>";
         loadingdiv.className = "-loading overlay";
-        body.appendChild(loadingdiv);
+        document.body.appendChild(loadingdiv);
         loadingtimeout = delay(function(){
             loadingtimeout = undefined;
             delay(function(){
@@ -226,7 +226,7 @@
     }
 
     function destroyLoading(){
-        if(loadingdiv.parentNode === body) body.removeChild(loadingdiv);
+        if(loadingdiv.parentNode === document.body) document.body.removeChild(loadingdiv);
         loadingtimeout = undefined;
         loadingdiv = undefined;
         loadingtime = undefined;
@@ -343,7 +343,7 @@
     }
 
     function touchstart(){
-        body.style.overflow = "initial";
+        document.body.style.overflow = "initial";
     }
 
     function touchenable(){
@@ -388,7 +388,6 @@
         projectpath = "/project/",
         transtime = 600,
 
-        body,
         root,
         canvas,
         context,
@@ -1137,8 +1136,8 @@
             </div>
         `;
 
-        body.appendChild(overlay);
-        body.appendChild(div);
+        document.body.appendChild(overlay);
+        document.body.appendChild(div);
 
         musicbuttons.play = querySelector(div, ".image .play");
         musicbuttons.back = querySelector(div, ".backwards");
@@ -1377,7 +1376,6 @@
         root = $("body>.root")[0];
         canvas = createElement("canvas");
         context = canvas.getContext("2d");
-        body = document.body;
 
         canvasresize();
 
