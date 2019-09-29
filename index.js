@@ -978,12 +978,12 @@
         root.getBoundingClientRect();
         querySelector(musicdiv, ".main>.image>.img").classList.add("show");
 
-        /*let average = averageRGB(e.target),
+        let average = averageRGB(e.target),
             contrast = contrastRGB(average);
 
         querySelector(musicdiv, ".main").style.background = "rgb(" + average.r + "," + average.g + "," + average.b + ")";
         if(contrast) musicdiv.classList.add("white");
-        else musicdiv.classList.remove("white");*/
+        else musicdiv.classList.remove("white");
     }
 
     function musicplayerdata(){
