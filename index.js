@@ -112,9 +112,9 @@
         return document.createElement(param);
     }
 
-    function slowdom(){
-        root.offsetWidth;
-        root.getBoundingClientRect();
+    function slowdom(el){
+        if(!el) el = root;
+        el.offsetWidth;
     }
 
     function delay(func, timeout){
@@ -667,7 +667,7 @@
         homenextcircle.style.animation = "";
         homenextcircle.classList.add("show");
 
-        slowdom();
+        slowdom(homenextcircle);
 
         homenextinterval = delay(function(){
             e.target.click();
@@ -848,22 +848,20 @@
             text1 = "Hi there, I'm Ioan, a 18 year old \"Automatic Control and Computer Engineering\" student based in Romania. Mostly focusing on front end developing, but also on back end, software, servers, networking and occasionally working on some small open-source libraries and other \"for-fun\" projects.",
             text2 = "Even though I'm a little bit lazy, I like to be competitive sometimes and that pretty much summaries my taste of activities. Tending to listen to music everytime I do something, I don't have a preffered genre, but the most of my favorites are rock and electronic - EDM, Trap, DnB, whatever.";
 
-            homeelement = createElement();
-            homeelement.className = "home";
-            homeelement.innerHTML = content;
-            root.appendChild(homeelement);
+        homeelement = createElement();
+        homeelement.className = "home";
+        homeelement.innerHTML = content;
+        root.appendChild(homeelement);
 
-            createlines(text, querySelector(homeelement, ".text"));
-            homeaboutlines(text1, text2, querySelectorAll(homeelement, ".secondary .desc p"));
+        createlines(text, querySelector(homeelement, ".text"));
+        homeaboutlines(text1, text2, querySelectorAll(homeelement, ".secondary .desc p"));
 
-            home.mouse = {x: 0, y: 0};
-            home.introdiv = querySelector(homeelement, ".intro>div");
+        home.mouse = {x: 0, y: 0};
+        home.introdiv = querySelector(homeelement, ".intro>div");
 
-            slowdom();
+        slowdom(homeelement);
 
         deleteLoading(function(){
-
-
 
             homeelement.classList.add("show");
 
@@ -1014,7 +1012,7 @@
         else musicdiv.classList.remove("white");
 
         querySelector(musicdiv, ".main").style.background = "rgb(" + average.r + "," + average.g + "," + average.b + ")";
-        slowdom();
+        slowdom(e.target);
         querySelector(musicdiv, ".main>.image>.img").classList.add("show");
     }
 
@@ -1190,7 +1188,7 @@
         musicplayerdata();
 
         querySelector(musicdiv, ".close").addEventListener("click", musicclose);
-        slowdom();
+        slowdom(musicdiv);
 
         musicdiv.classList.add("show");
         overlay.classList.add("show");
