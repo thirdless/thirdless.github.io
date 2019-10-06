@@ -1,18 +1,24 @@
 //;(function(){
 
     "use strict";
+
+    function errorshow(msg){
+        var error = document.createElement("div");
+        error.className = "-error-panel overlay";
+        error.innerHTML = "<div>" + msg + "</div>";
+        document.body.appendChild(error);
+        throw "stop";
+    }
+
     try{
         let p = document.createElement("p");
         if(!("transform" in p.style) || !("filter" in p.style) || !("classList" in p) || !("requestAnimationFrame" in window) || !("CSS" in window)) throw "stop";
         performance.now();
+        localStorage.getItem("test");
         p = null;
     }
     catch(e){
-        var error = document.createElement("div");
-        error.className = "-error-panel overlay";
-        error.innerHTML = "<div><h1>Your browser doesn't meet the minimum requirements this site has.</h1>Please update your browser or try another one.</div>";
-        document.body.appendChild(error);
-        throw "stop";
+        errorshow("<h1>Your browser doesn't meet the minimum requirements this site has.</h1>Please update your browser or try another one.");
     }
 
     // some basic definitions but because of the frequent changes it will be more convenient to put them here lol
@@ -31,7 +37,7 @@
     let svgs = {
         smuwn: {
             // view: "0 0 135 32",
-            // path: '<path d="M11 0.015c-0.053 0.005-0.229 0.021-0.394 0.033-1.473 0.127-2.784 0.478-4.048 1.084-2.376 1.141-4.067 2.994-4.871 5.339-0.332 0.972-0.466 1.803-0.466 2.92 0 0.941 0.067 1.648 0.229 2.397 0.308 1.438 1.041 2.813 2.011 3.771 0.707 0.702 1.414 1.196 2.326 1.631 1.235 0.59 2.354 0.981 4.764 1.662 1.927 0.547 2.947 1.01 3.682 1.679 0.69 0.626 0.967 1.387 0.888 2.438-0.091 1.211-0.492 2.003-1.285 2.534-0.817 0.549-1.824 0.767-3.291 0.712-0.922-0.033-1.619-0.189-2.519-0.561-0.757-0.315-1.106-0.506-2.925-1.612-0.492-0.298-0.795-0.399-1.256-0.418-0.234-0.01-0.344-0.005-0.485 0.026-0.432 0.098-0.812 0.325-1.065 0.64-0.06 0.074-0.599 0.927-1.204 1.894l-1.096 1.758 0.186 0.172c0.85 0.783 1.743 1.39 2.937 1.999 2.085 1.06 4.382 1.703 6.66 1.865 0.533 0.036 2.018 0.017 2.522-0.036 1.285-0.134 2.357-0.389 3.403-0.807 1.089-0.437 2.015-0.984 2.842-1.679 0.33-0.277 0.965-0.924 1.225-1.249l0.196-0.246v-11.906l-0.174-0.165c-0.829-0.783-1.516-1.249-2.615-1.765-1.287-0.604-2.457-1.032-4.733-1.731-1.435-0.442-2.405-0.85-3.08-1.301-0.571-0.38-0.915-0.736-1.113-1.146-0.177-0.363-0.208-0.523-0.21-1.051 0-0.38 0.01-0.494 0.053-0.7 0.282-1.306 1.225-2.125 2.739-2.381 0.382-0.064 0.657-0.084 1.218-0.084 1.051 0 1.676 0.119 2.679 0.516 0.552 0.217 0.793 0.334 1.719 0.836 0.451 0.246 0.9 0.475 0.993 0.513 0.525 0.203 1.134 0.184 1.54-0.05 0.279-0.162 0.611-0.542 0.864-0.993l0.119-0.213v-4.212l-0.291-0.17c-1.593-0.924-3.357-1.524-5.304-1.803-0.798-0.112-1.161-0.136-2.249-0.143-0.564-0.005-1.07-0.002-1.122 0.002z"/></path><path d="M33.411 9.054c-0.812 0.088-1.645 0.332-2.383 0.695-0.759 0.373-1.426 0.857-2.18 1.588-0.184 0.179-0.337 0.32-0.341 0.315s-0.091-0.289-0.191-0.63c-0.103-0.341-0.227-0.707-0.277-0.812-0.191-0.396-0.461-0.626-0.919-0.778l-0.167-0.057-4.573-0.014v22.305h6.662v-15.863l0.318-0.315c0.802-0.798 1.574-1.251 2.354-1.383 0.475-0.081 1.208-0.038 1.669 0.096 1.165 0.339 1.71 1.175 1.817 2.791 0.017 0.256 0.026 2.741 0.026 7.527v7.147h6.686v-7.259c0-4.984 0.007-7.333 0.026-7.493 0.11-1.001 0.506-1.746 1.206-2.264 0.363-0.27 0.831-0.466 1.297-0.544 0.265-0.045 0.886-0.05 1.163-0.012 0.456 0.062 0.924 0.236 1.237 0.461 0.21 0.15 0.509 0.475 0.64 0.697 0.174 0.294 0.306 0.647 0.392 1.048 0.107 0.501 0.105 0.332 0.105 8.064v7.302h6.686v-7.398c0-4.785-0.01-7.512-0.024-7.73-0.146-1.987-0.666-3.551-1.598-4.807-0.258-0.344-0.809-0.915-1.125-1.156-1.072-0.826-2.288-1.292-3.892-1.492-0.279-0.033-0.521-0.043-1.242-0.043-0.795 0-0.938 0.007-1.289 0.055-1.13 0.153-1.941 0.392-2.83 0.829-0.755 0.37-1.344 0.79-1.925 1.371-0.416 0.418-0.824 0.95-1.063 1.387-0.06 0.11-0.105 0.153-0.105 0.096 0-0.038-0.232-0.53-0.373-0.79-0.291-0.537-0.659-1.032-1.084-1.454-0.805-0.807-1.645-1.237-2.794-1.435-0.248-0.043-0.416-0.053-1.003-0.057-0.387-0.005-0.795 0.002-0.907 0.014z"/></path><path d="M121.25 9.042c-1.139 0.112-1.915 0.325-2.782 0.764-1.356 0.685-2.378 1.743-3.083 3.197-0.447 0.919-0.702 1.846-0.874 3.14-0.041 0.303-0.043 0.8-0.05 7.921l-0.005 7.601h6.66l0.01-7.314c0.01-7.799 0.005-7.455 0.129-8.016 0.076-0.351 0.148-0.549 0.313-0.867 0.368-0.712 0.96-1.153 1.774-1.318 0.406-0.084 1.106-0.084 1.586 0 0.919 0.158 1.87 0.635 2.799 1.402l0.27 0.222v15.892h6.662v-22.305l-4.573 0.014-0.191 0.064c-0.353 0.122-0.597 0.303-0.786 0.587-0.143 0.217-0.158 0.253-0.406 1.034l-0.22 0.683-0.201-0.189c-1.528-1.426-3.102-2.197-5.038-2.469-0.198-0.026-0.501-0.041-1.087-0.045-0.447-0.002-0.855-0.002-0.907 0.002z"/></path><path d="M56.817 16.96c0.01 8.324-0.002 7.677 0.141 8.532 0.272 1.636 0.867 2.992 1.791 4.098 0.955 1.139 2.333 1.944 3.854 2.252 0.621 0.127 0.869 0.146 1.791 0.146 1.07 0 1.457-0.045 2.297-0.263 1.454-0.38 2.706-1.094 3.947-2.252l0.201-0.189 0.22 0.683c0.248 0.781 0.263 0.817 0.406 1.034 0.189 0.284 0.432 0.466 0.786 0.587l0.191 0.064 4.573 0.014v-22.305h-6.662v15.892l-0.27 0.222c-0.929 0.767-1.879 1.244-2.799 1.402-0.48 0.084-1.18 0.084-1.586 0-0.814-0.165-1.406-0.607-1.774-1.318-0.165-0.318-0.236-0.516-0.313-0.867-0.124-0.561-0.119-0.217-0.129-8.019l-0.01-7.312h-6.66l0.005 7.598z"/></path><path d="M80.023 20.513v11.154l4.573-0.014 0.167-0.057c0.458-0.153 0.728-0.382 0.919-0.778 0.05-0.105 0.174-0.47 0.277-0.812 0.1-0.341 0.186-0.626 0.191-0.63s0.158 0.136 0.341 0.315c1.137 1.098 2.233 1.75 3.489 2.08 0.721 0.189 1.204 0.241 2.073 0.222 0.671-0.012 0.977-0.053 1.476-0.184 1.533-0.406 2.775-1.547 3.568-3.276 0.064-0.143 0.119-0.27 0.119-0.282 0-0.057 0.045-0.014 0.105 0.096 0.239 0.437 0.647 0.97 1.063 1.387 0.58 0.58 1.17 1.001 1.925 1.371 0.888 0.437 1.7 0.676 2.83 0.829 0.351 0.048 0.494 0.055 1.289 0.055 0.721 0 0.962-0.01 1.242-0.043 1.605-0.201 2.82-0.666 3.892-1.492 0.315-0.241 0.867-0.812 1.125-1.156 0.931-1.256 1.452-2.82 1.598-4.807 0.014-0.217 0.024-2.944 0.024-7.732v-7.395h-6.686v7.302c0 7.732 0.002 7.563-0.105 8.064-0.086 0.401-0.217 0.755-0.392 1.048-0.131 0.222-0.43 0.547-0.64 0.697-0.313 0.224-0.781 0.399-1.237 0.461-0.277 0.038-0.898 0.033-1.163-0.012-0.466-0.079-0.934-0.275-1.297-0.544-0.7-0.518-1.096-1.263-1.206-2.264-0.019-0.16-0.026-2.51-0.026-7.493v-7.259h-6.686v7.147c0 4.785-0.01 7.271-0.026 7.527-0.055 0.848-0.22 1.442-0.528 1.901-0.353 0.53-0.955 0.869-1.746 0.986-0.327 0.05-0.919 0.05-1.213 0-0.781-0.131-1.552-0.585-2.354-1.383l-0.318-0.315v-15.863h-6.662v11.152z"/></path>'
+            // path: '<path d="M11 0.015c-0.053 0.005-0.229 0.021-0.394 0.033-1.473 0.127-2.784 0.478-4.048 1.084-2.376 1.141-4.067 2.994-4.871 5.339-0.332 0.972-0.466 1.803-0.466 2.92 0 0.941 0.067 1.648 0.229 2.397 0.308 1.438 1.041 2.813 2.011 3.771 0.707 0.702 1.414 1.196 2.326 1.631 1.235 0.59 2.354 0.981 4.764 1.662 1.927 0.547 2.947 1.01 3.682 1.679 0.69 0.626 0.967 1.387 0.888 2.438-0.091 1.211-0.492 2.003-1.285 2.534-0.817 0.549-1.824 0.767-3.291 0.712-0.922-0.033-1.619-0.189-2.519-0.561-0.757-0.315-1.106-0.506-2.925-1.612-0.492-0.298-0.795-0.399-1.256-0.418-0.234-0.01-0.344-0.005-0.485 0.026-0.432 0.098-0.812 0.325-1.065 0.64-0.06 0.074-0.599 0.927-1.204 1.894l-1.096 1.758 0.186 0.172c0.85 0.783 1.743 1.39 2.937 1.999 2.085 1.06 4.382 1.703 6.66 1.865 0.533 0.036 2.018 0.017 2.522-0.036 1.285-0.134 2.357-0.389 3.403-0.807 1.089-0.437 2.015-0.984 2.842-1.679 0.33-0.277 0.965-0.924 1.225-1.249l0.196-0.246v-11.906l-0.174-0.165c-0.829-0.783-1.516-1.249-2.615-1.765-1.287-0.604-2.457-1.032-4.733-1.731-1.435-0.442-2.405-0.85-3.08-1.301-0.571-0.38-0.915-0.736-1.113-1.146-0.177-0.363-0.208-0.523-0.21-1.051 0-0.38 0.01-0.494 0.053-0.7 0.282-1.306 1.225-2.125 2.739-2.381 0.382-0.064 0.657-0.084 1.218-0.084 1.051 0 1.676 0.119 2.679 0.516 0.552 0.217 0.793 0.334 1.719 0.836 0.451 0.246 0.9 0.475 0.993 0.513 0.525 0.203 1.134 0.184 1.54-0.05 0.279-0.162 0.611-0.542 0.864-0.993l0.119-0.213v-4.212l-0.291-0.17c-1.593-0.924-3.357-1.524-5.304-1.803-0.798-0.112-1.161-0.136-2.249-0.143-0.564-0.005-1.07-0.002-1.122 0.002z"/></path><path d="M33.411 9.054c-0.812 0.088-1.645 0.332-2.383 0.695-0.759 0.373-1.426 0.857-2.18 1.588-0.184 0.179-0.337 0.32-0.341 0.315s-0.091-0.289-0.191-0.63c-0.103-0.341-0.227-0.707-0.277-0.812-0.191-0.396-0.461-0.626-0.919-0.778l-0.167-0.057-4.573-0.014v22.305h6.662v-15.863l0.318-0.315c0.802-0.798 1.574-1.251 2.354-1.383 0.475-0.081 1.208-0.038 1.669 0.096 1.165 0.339 1.71 1.175 1.817 2.791 0.017 0.256 0.026 2.741 0.026 7.527v7.147h6.686v-7.259c0-4.984 0.007-7.333 0.026-7.493 0.11-1.001 0.506-1.746 1.206-2.264 0.363-0.27 0.831-0.466 1.297-0.544 0.265-0.045 0.886-0.05 1.163-0.012 0.456 0.062 0.924 0.236 1.237 0.461 0.21 0.15 0.509 0.475 0.64 0.697 0.174 0.294 0.306 0.647 0.392 1.048 0.107 0.501 0.105 0.332 0.105 8.064v7.302h6.686v-7.398c0-4.785-0.01-7.512-0.024-7.73-0.146-1.987-0.667-3.551-1.598-4.807-0.258-0.344-0.809-0.915-1.125-1.156-1.072-0.826-2.288-1.292-3.892-1.492-0.279-0.033-0.521-0.043-1.242-0.043-0.795 0-0.938 0.007-1.289 0.055-1.13 0.153-1.941 0.392-2.83 0.829-0.755 0.37-1.344 0.79-1.925 1.371-0.416 0.418-0.824 0.95-1.063 1.387-0.06 0.11-0.105 0.153-0.105 0.096 0-0.038-0.232-0.53-0.373-0.79-0.291-0.537-0.659-1.032-1.084-1.454-0.805-0.807-1.645-1.237-2.794-1.435-0.248-0.043-0.416-0.053-1.003-0.057-0.387-0.005-0.795 0.002-0.907 0.014z"/></path><path d="M121.25 9.042c-1.139 0.112-1.915 0.325-2.782 0.764-1.356 0.685-2.378 1.743-3.083 3.197-0.447 0.919-0.702 1.846-0.874 3.14-0.041 0.303-0.043 0.8-0.05 7.921l-0.005 7.601h6.66l0.01-7.314c0.01-7.799 0.005-7.455 0.129-8.016 0.076-0.351 0.148-0.549 0.313-0.867 0.368-0.712 0.96-1.153 1.774-1.318 0.406-0.084 1.106-0.084 1.586 0 0.919 0.158 1.87 0.635 2.799 1.402l0.27 0.222v15.892h6.662v-22.305l-4.573 0.014-0.191 0.064c-0.353 0.122-0.597 0.303-0.786 0.587-0.143 0.217-0.158 0.253-0.406 1.034l-0.22 0.683-0.201-0.189c-1.528-1.426-3.102-2.197-5.038-2.469-0.198-0.026-0.501-0.041-1.087-0.045-0.447-0.002-0.855-0.002-0.907 0.002z"/></path><path d="M56.817 16.96c0.01 8.324-0.002 7.677 0.141 8.532 0.272 1.636 0.867 2.992 1.791 4.098 0.955 1.139 2.333 1.944 3.854 2.252 0.621 0.127 0.869 0.146 1.791 0.146 1.07 0 1.457-0.045 2.297-0.263 1.454-0.38 2.706-1.094 3.947-2.252l0.201-0.189 0.22 0.683c0.248 0.781 0.263 0.817 0.406 1.034 0.189 0.284 0.432 0.466 0.786 0.587l0.191 0.064 4.573 0.014v-22.305h-6.662v15.892l-0.27 0.222c-0.929 0.767-1.879 1.244-2.799 1.402-0.48 0.084-1.18 0.084-1.586 0-0.814-0.165-1.406-0.607-1.774-1.318-0.165-0.318-0.236-0.516-0.313-0.867-0.124-0.561-0.119-0.217-0.129-8.019l-0.01-7.312h-6.66l0.005 7.598z"/></path><path d="M80.023 20.513v11.154l4.573-0.014 0.167-0.057c0.458-0.153 0.728-0.382 0.919-0.778 0.05-0.105 0.174-0.47 0.277-0.812 0.1-0.341 0.186-0.626 0.191-0.63s0.158 0.136 0.341 0.315c1.137 1.098 2.233 1.75 3.489 2.08 0.721 0.189 1.204 0.241 2.073 0.222 0.671-0.012 0.977-0.053 1.476-0.184 1.533-0.406 2.775-1.547 3.568-3.276 0.064-0.143 0.119-0.27 0.119-0.282 0-0.057 0.045-0.014 0.105 0.096 0.239 0.437 0.647 0.97 1.063 1.387 0.58 0.58 1.17 1.001 1.925 1.371 0.888 0.437 1.7 0.676 2.83 0.829 0.351 0.048 0.494 0.055 1.289 0.055 0.721 0 0.962-0.01 1.242-0.043 1.605-0.201 2.82-0.667 3.892-1.492 0.315-0.241 0.867-0.812 1.125-1.156 0.931-1.256 1.452-2.82 1.598-4.807 0.014-0.217 0.024-2.944 0.024-7.732v-7.395h-6.686v7.302c0 7.732 0.002 7.563-0.105 8.064-0.086 0.401-0.217 0.755-0.392 1.048-0.131 0.222-0.43 0.547-0.64 0.697-0.313 0.224-0.781 0.399-1.237 0.461-0.277 0.038-0.898 0.033-1.163-0.012-0.466-0.079-0.934-0.275-1.297-0.544-0.7-0.518-1.096-1.263-1.206-2.264-0.019-0.16-0.026-2.51-0.026-7.493v-7.259h-6.686v7.147c0 4.785-0.01 7.271-0.026 7.527-0.055 0.848-0.22 1.442-0.528 1.901-0.353 0.53-0.955 0.869-1.746 0.986-0.327 0.05-0.919 0.05-1.213 0-0.781-0.131-1.552-0.585-2.354-1.383l-0.318-0.315v-15.863h-6.662v11.152z"/></path>'
             view: "0 0 178 32",
             path: '<path d="M12.147 0.054c-4.643 0.28-8.182 1.934-10.042 4.702-1.065 1.58-1.512 3.18-1.453 5.207 0.044 1.423 0.25 2.346 0.771 3.386 0.795 1.58 2.562 3.092 4.53 3.872 1.242 0.491 3.072 1.026 5.899 1.723 3.21 0.79 3.961 1.021 4.893 1.507 1.261 0.648 1.855 1.443 1.855 2.493 0 0.736-0.245 1.301-0.81 1.865-0.849 0.849-2.022 1.252-4.079 1.404-3.534 0.26-7.804-0.864-10.739-2.827-0.265-0.177-0.496-0.319-0.515-0.319-0.034 0-2.405 5.202-2.425 5.32-0.020 0.088 1.129 0.815 1.929 1.227 2.356 1.202 5.291 1.993 8.491 2.292 0.849 0.079 3.416 0.083 4.245 0.005 3.283-0.314 5.811-1.222 7.804-2.807 1.615-1.286 2.724-3.156 3.097-5.227 0.108-0.604 0.123-2.287 0.025-2.896-0.201-1.261-0.604-2.282-1.227-3.121-0.319-0.422-1.163-1.252-1.683-1.644-0.594-0.447-1.261-0.839-1.899-1.124-1.080-0.481-3.382-1.188-5.674-1.742-2.503-0.609-2.866-0.702-3.656-0.937-1.443-0.437-2.405-0.864-2.915-1.286-0.82-0.687-1.060-1.973-0.564-3.068 0.294-0.653 0.859-1.198 1.639-1.585 1.016-0.501 2.091-0.697 3.853-0.702 1.129 0 1.782 0.044 2.65 0.196 1.767 0.304 3.637 0.952 5.345 1.84 0.363 0.191 0.677 0.324 0.697 0.304 0.029-0.029 1.531-3.686 2.11-5.129l0.093-0.236-0.383-0.226c-3.004-1.782-7.539-2.724-11.863-2.469z"></path><path d="M30.626 16v15.46h6.724l0.010-9.036 0.015-9.040 8.982 14.783 3.274-0.020 9.045-15.19 0.029 4.697c0.015 2.587 0.034 6.748 0.039 9.252l0.005 4.555h6.729l-0.029-6.788c-0.015-3.73-0.039-10.685-0.054-15.46l-0.029-8.672h-5.865l-5.688 9.595c-3.126 5.276-5.698 9.59-5.713 9.59s-2.621-4.314-5.791-9.59l-5.767-9.59-5.914-0.005v15.46z"></path><path d="M72.555 9.948c0.015 10.204 0.005 9.782 0.285 11.421 0.888 5.252 4.132 8.834 9.124 10.091 2.547 0.638 5.767 0.702 8.442 0.167 2.68-0.535 4.879-1.683 6.577-3.436 1.968-2.027 3.043-4.515 3.47-8.029 0.074-0.638 0.083-1.556 0.098-10.164l0.020-9.458h-7.067l-0.020 9.261c-0.015 8.437-0.025 9.32-0.098 9.85-0.309 2.125-0.903 3.494-1.963 4.53-0.825 0.805-1.841 1.315-3.102 1.561-0.982 0.186-2.459 0.186-3.46-0.005-2.645-0.501-4.285-2.258-4.883-5.237-0.245-1.227-0.236-0.933-0.255-10.724l-0.020-9.237h-7.166l0.020 9.409z"></path><path d="M107.73 16v15.46l5.914-0.005 5.767-9.59c3.171-5.276 5.777-9.59 5.791-9.59s2.587 4.314 5.713 9.59l5.688 9.595h5.865l0.029-8.677c0.015-4.771 0.039-11.725 0.054-15.46l0.029-6.783h-6.729l-0.005 4.55c-0.005 2.508-0.025 6.67-0.039 9.256l-0.029 4.697-9.045-15.19-3.274-0.020-8.982 14.783-0.015-9.040-0.010-9.036h-6.724v15.46z"></path><path d="M149.742 16v15.46h7.067l0.010-9.364 0.015-9.36 15.362 18.719 5.914 0.005v-30.92h-7.117l-0.010 9.355-0.015 9.36-15.313-18.709-5.914-0.005v15.46z"></path>'
         },
@@ -94,8 +100,55 @@
         close: {
             view: "0 0 24 24",
             path: '<path d="M18.984 6.422l-5.578 5.578 5.578 5.578-1.406 1.406-5.578-5.578-5.578 5.578-1.406-1.406 5.578-5.578-5.578-5.578 1.406-1.406 5.578 5.578 5.578-5.578z"></path>'
+        },
+        touch: {
+            view: "0 0 32 32",
+            path: '<path d="M19.499 29c4.143 0 7.501-3.585 7.501-7.5 0 0 0 2.313 0 0v-5.998c0-0.829-0.667-1.502-1.5-1.502-0.828 0-1.5 0.671-1.5 1.502v0.498h-1v-2.494c0-0.832-0.667-1.506-1.5-1.506-0.828 0-1.5 0.672-1.5 1.506v1.494h-1v-2.494c0-0.832-0.667-1.506-1.5-1.506-0.828 0-1.5 0.672-1.5 1.506v3.494h-1v-10.495c0-0.831-0.667-1.505-1.5-1.505-0.828 0-1.5 0.667-1.5 1.505v11.295c-2.058-2.2-4.768-4.621-5.879-3.504-1.087 1.093 1.714 4.105 5.626 10.687 1.763 2.966 3.993 5.016 7.751 5.017v0 0zM28 21.5c0 4.694-3.806 8.5-8.5 8.5-3.113 0-6.398-1.453-8.659-5.572-3.264-5.946-7.437-9.845-5.45-11.832 1.422-1.422 3.654-0.058 5.609 1.771v0-8.858c0-1.393 1.119-2.508 2.5-2.508 1.39 0 2.5 1.123 2.5 2.508v4.99c0.418-0.313 0.937-0.498 1.5-0.498 1.083 0 1.995 0.677 2.346 1.628 0.441-0.39 1.020-0.628 1.654-0.628 1.39 0 2.5 1.118 2.5 2.498v0.013c0.418-0.313 0.937-0.497 1.5-0.497 1.39 0 2.5 1.119 2.5 2.5v5.986z"></path>'
+        },
+        arrowup: {
+            view: "0 0 24 24",
+            path: '<path d="M12 3.172l-6.414 6.414c-0.781 0.781-0.781 2.047 0 2.828s2.047 0.781 2.828 0l1.586-1.586v7.242c0 1.104 0.895 2 2 2s2-0.896 2-2v-7.242l1.586 1.586c0.391 0.391 0.902 0.586 1.414 0.586s1.023-0.195 1.414-0.586c0.781-0.781 0.781-2.047 0-2.828l-6.414-6.414z"></path>'
+        },
+        ro: {
+            view: "0 0 512 512",
+            path: '<path style="fill:#FFDA44;" d="M345.043,15.922C317.309,5.633,287.314,0,256,0c-31.314-0.001-61.31,5.633-89.043,15.922 l-22.261,240.077l22.261,240.077C194.689,506.368,224.685,512,256,512c31.313,0,61.31-5.632,89.043-15.924L367.303,256 L345.043,15.922z"></path><path style="fill:#D80027;" d="M512,256c0-110.07-69.472-203.907-166.957-240.077v480.156C442.528,459.905,511.999,366.072,512,256z"></path><path style="fill:#0052B4;" d="M0,255.999c0,110.073,69.472,203.906,166.955,240.079l0.001-480.154 C69.472,52.094,0,145.928,0,255.999z"></path>'
+        },
+        en: {
+            view: "0 0 512 512",
+            path: '<circle style="fill:#F0F0F0;" cx="256" cy="256" r="256"></circle><g><path style="fill:#0052B4;" d="M52.92,100.142c-20.109,26.163-35.272,56.318-44.101,89.077h133.178L52.92,100.142z"></path><path style="fill:#0052B4;" d="M503.181,189.219c-8.829-32.758-23.993-62.913-44.101-89.076l-89.075,89.076H503.181z"></path><path style="fill:#0052B4;" d="M8.819,322.784c8.83,32.758,23.993,62.913,44.101,89.075l89.074-89.075L8.819,322.784L8.819,322.784z"></path><path style="fill:#0052B4;" d="M411.858,52.921c-26.163-20.109-56.317-35.272-89.076-44.102v133.177L411.858,52.921z"></path><path style="fill:#0052B4;" d="M100.142,459.079c26.163,20.109,56.318,35.272,89.076,44.102V370.005L100.142,459.079z"></path><path style="fill:#0052B4;" d="M189.217,8.819c-32.758,8.83-62.913,23.993-89.075,44.101l89.075,89.075V8.819z"></path><path style="fill:#0052B4;" d="M322.783,503.181c32.758-8.83,62.913-23.993,89.075-44.101l-89.075-89.075V503.181z"></path><path style="fill:#0052B4;" d="M370.005,322.784l89.075,89.076c20.108-26.162,35.272-56.318,44.101-89.076H370.005z"></path></g><g><path style="fill:#D80027;" d="M509.833,222.609h-220.44h-0.001V2.167C278.461,0.744,267.317,0,256,0 c-11.319,0-22.461,0.744-33.391,2.167v220.44v0.001H2.167C0.744,233.539,0,244.683,0,256c0,11.319,0.744,22.461,2.167,33.391 h220.44h0.001v220.442C233.539,511.256,244.681,512,256,512c11.317,0,22.461-0.743,33.391-2.167v-220.44v-0.001h220.442 C511.256,278.461,512,267.319,512,256C512,244.683,511.256,233.539,509.833,222.609z"></path><path style="fill:#D80027;" d="M322.783,322.784L322.783,322.784L437.019,437.02c5.254-5.252,10.266-10.743,15.048-16.435 l-97.802-97.802h-31.482V322.784z"></path><path style="fill:#D80027;" d="M189.217,322.784h-0.002L74.98,437.019c5.252,5.254,10.743,10.266,16.435,15.048l97.802-97.804 V322.784z"></path><path style="fill:#D80027;" d="M189.217,189.219v-0.002L74.981,74.98c-5.254,5.252-10.266,10.743-15.048,16.435l97.803,97.803 H189.217z"></path><path style="fill:#D80027;" d="M322.783,189.219L322.783,189.219L437.02,74.981c-5.252-5.254-10.743-10.266-16.435-15.047 l-97.802,97.803V189.219z"></path></g>'
         }
     };
+
+    let translations = {
+        en: {
+            "home.intro.text": "I'm Ioan, a student living in Romania. Mostly doing programming, listening to music, sport and whatnot. Huge technology and bass addict, messing with different aspects of programming and design, working with efficiency and minimalism in mind.",
+            "home.desc.1": "Hi there, I'm Ioan, a 19 year old \"Automatic Control and Computer Engineering\" student from Romania. Mostly focusing on front-end developing, but also on back-end, software, servers, networking and occasionally working on some small open-source libraries and other \"for-fun\" projects.",
+            "home.desc.2": "Sometimes I like to be competitive and that pretty much summaries my taste of activities. Tending to listen to music everytime I do something, I don't have a preffered genre, but most of my favorites are rock and electronic - EDM, House, whatever. Worth mentioning I've also played tennis in the past, and now trying to learn to play the guitar and speak russian, even though these are not so relevant.",
+            "home.skills.title": "Some things I can do better",
+            "home.skills.footer": "The \"the farthest, the more-suckness\" spectrum.",
+            "home.contact.title": "For collaborations, questions or freelance projects, contact me via:",
+            "home.contact.text": "%s1% at %s2%",
+            "home.next.work": "My work.",
+            "home.header.music": "Music",
+            "home.header.blog": "Blog.",
+            "home.header.work": "Work.",
+            "home.intro.scroll": "Scroll down"
+        },
+        ro: {
+            "home.intro.text": "Sunt Ioan, un student din România. Cel mai mult programând, ascultând muzică, făcând sport și alte fleacuri. Uriaș fan al tehnologiei și al basului, jucându-mă cu diferite aspecte ale programării și designului, ținând seamă în munca mea și de eficiență și minimalism.",
+            "home.desc.1": "Bună, sunt Ioan, am 19 ani și sunt student la \"Automatică și Calculatoare\" în România. Concentrându-mă cel mai mult pe partea de dezvoltare front-end, dar și pe back-end, software, servere, rețele și ocazional muncind și la unele librării micuțe cu sursă deschisă, dar și alte proiecte \"for-fun\".",
+            "home.desc.2": "Câteodată îmi place să fiu competitiv și asta rezumă destul de mult gusturile mele în materie de activități. Tinzând să ascult muzică de fiecare dată când fac ceva, nu am un gen favorit, dar preferatele mele ar fi rock și electronică - EDM, House, ce-o fi. Merită menționat și că am jucat tenis în trecut, și acum încerc să învăț să cânt la chitară și să vorbesc rusa, deși nu sunt așa de relevante.",
+            "home.skills.title": "Câteva lucruri la care mă descurc binișor",
+            "home.skills.footer": "Spectrumul \"Cu cât mai departe, cu atât mai praf\".",
+            "home.contact.title": "Pentru colaborări, întrebări sau proiecte freelance, contactează-mă prin:",
+            "home.contact.text": "%s1% la %s2%",
+            "home.next.work": "Activitatea mea.",
+            "home.header.music": "Muzică",
+            "home.header.blog": "Blog.",
+            "home.header.work": "Activitate.",
+            "home.intro.scroll": "Glisează în jos"
+        }
+    }
 
     // main definitions
 
@@ -290,14 +343,15 @@
                 if(e.wheelDelta) return e.wheelDelta / e.detail / 40 * (e.detail > 0 ? 1 : -1);
                 else return -e.detail / 3;
             }
-            else return e.wheelDelta / 120;
+            else if(e.wheelDelta && ~navigator.userAgent.indexOf("OPR")) return Math.min(Math.max(e.wheelDelta / 60, -1), 1);
+            else if(e.wheelDelta) return Math.min(Math.max(e.wheelDelta / 360, -1), 1);
+            else return -e.deltaY / 6;
         }
 
         function update(){
             moving = true;
             let delta = (pos - target.scrollTop) / factor;
             target.scrollTop += delta;
-
             if(abs(delta) > 1) requestAnimationFrame(update);
             else{
                 moving = false;
@@ -384,6 +438,36 @@
 
     function contrastRGB(a){
         return (a.r * 299 + a.g * 587 + a.b * 114) / 1000 >= 128 ? 0 : 1;
+    }
+
+    function inframe(){
+        try{
+            return window.self !== window.top;
+        }
+        catch(e){
+            return true;
+        }
+    }
+
+    function touchdevice(){
+        return "ontouchstart" in window || navigator.maxTouchPoints;
+    }
+
+    let currentlang = "",
+        langname = "preflang";
+
+    function i18n(text){
+        let found = translations[currentlang][text];
+        return found ? found : "";
+    }
+
+    function changelang(e){
+        let target = e.currentTarget.getAttribute("data-lang");
+        if(target in translations){
+            currentlang = target;
+            localStorage.setItem(langname, target);
+            location.reload();
+        }
     }
 
     // page content manager
@@ -663,9 +747,9 @@
     }
 
     function homesetskew(){
-        let element = window.getComputedStyle(querySelector(homeelement,".next"), ':before'),
+        let element = window.getComputedStyle(querySelector(homeelement,".footer"), ':before'),
             height = parseFloat(element.height, 10),
-            width = parseFloat(element.width, 10),
+            width = window.innerWidth,
             formula = Math.asin(height / Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2))) * 180 / Math.PI;
 
         document.documentElement.style.setProperty("--skew-tilt", formula + "deg");
@@ -706,13 +790,20 @@
             parent = querySelector(element, "div");
 
         div.className = "spinner";
-        div.innerHTML = "<svg viewBox=\"0 0 100 100\"><circle/></svg>";
+        div.innerHTML = '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40"/></svg>';
 
         let svg = querySelector(div, "svg");
         homenextcircle = querySelector(svg, "circle");
 
         parent.appendChild(div);
-        document.documentElement.style.setProperty("--stroke-length", homenextcircle.getTotalLength());
+
+        try{
+            document.documentElement.style.setProperty("--stroke-length", homenextcircle.getTotalLength());
+        }
+        catch(e){
+            homenextcircle.style.display = "none";
+            return;
+        }
 
         element.addEventListener("mouseenter", homenextstart);
         element.addEventListener("mouseleave", homenextstop);
@@ -755,7 +846,6 @@
         scrolldivs = [];
 
         homedivs = {
-            links: querySelector(homeelement, sec + ".links"),
             desc1: querySelector(homeelement, sec + ".desc>div:first-of-type"),
             desc2: querySelector(homeelement, sec + ".desc>div:last-of-type"),
             skills: querySelector(homeelement, sec + ".skills"),
@@ -791,8 +881,8 @@
     function homelinesresize(){
         if(typeof homeresizetimeout !== "undefined") clearTimeout(homeresizetimeout);
         homeresizetimeout = delay(function(){
-            createlines(hometext, querySelector(homeelement, ".text"), true);
-            homeaboutlines(hometext1, hometext2, querySelectorAll(homeelement, ".secondary .desc p"), true);
+            createlines(i18n("home.intro.text"), querySelector(homeelement, ".text"), true);
+            homeaboutlines(i18n("home.desc.1"), i18n("home.desc.2"), querySelectorAll(homeelement, ".secondary .desc p"), true);
             homeresizetimeout = undefined;
         }, 500);
 
@@ -804,9 +894,24 @@
         }
     }
 
-    let hometext = "I'm Ioan, a student living in Romania. Mostly doing programming, listening to music, gaming and whatnot. Huge technology and bass addict, messing with different aspects of programming and design, working with efficiency and minimalism in mind.",
-        hometext1 = "Hi there, I'm Ioan, a 18 year old \"Automatic Control and Computer Engineering\" student based in Romania. Mostly focusing on front end developing, but also on back end, software, servers, networking and occasionally working on some small open-source libraries and other \"for-fun\" projects.",
-        hometext2 = "Even though I'm a little bit lazy, I like to be competitive sometimes and that pretty much summaries my taste of activities. Tending to listen to music everytime I do something, I don't have a preffered genre, but the most of my favorites are rock and electronic - EDM, Trap, DnB, whatever.";
+    function homemultilang(){
+        let langel= querySelector(homeelement, ".lang"),
+            other = createElement();
+        //langel.innerHTML += "<div class=\"option\" data-lang=\"" + currentlang + "\">" + svg(currentlang) + " " + currentlang.toUpperCase() + "</div>";
+        langel.innerHTML += '<div class="option" data-lang="' + currentlang + '">' + svg(currentlang) + " " + currentlang.toUpperCase() + '</div>';
+        other.className = "other";
+        langel.appendChild(other);
+        for(let i in translations){
+            if(currentlang !== i){
+                let div = createElement();
+                div.className = "option";
+                div.setAttribute("data-lang", i);
+                div.innerHTML = svg(i) + " " + i.toUpperCase();
+                div.addEventListener("click", changelang);
+                other.appendChild(div);
+            }
+        }
+    }
 
     function createHome(){
         let content = `
@@ -818,27 +923,21 @@
                             <div class="header">
                                 <div class="logo">${svg("smuwn")}</div>
                                 <div class="menu">
-                                    ${homemenuitem("music", svg("music") + "Music")}
+                                    ${homemenuitem("music", svg("music") + i18n("home.header.music"))}
                                     <div class="separator music-sep"></div>
-                                    ${homemenuitem("work link", "Work.", "/work")}
-                                    ${homemenuitem("blog link", "Blog.", "https://blog.smuwn.xyz")}
+                                    ${homemenuitem("work link", i18n("home.header.work"), "/work")}
+                                    ${homemenuitem("blog link", i18n("home.header.blog"), "https://blog.smuwn.xyz\" data-target=\"_blank")}
                                 </div>
                             </div>
                             <div class="text"></div>
                             <div class="scroll">
-                                <div>${svg("scroll")}<span>Scroll down</span></div>
+                                <div>${touchdevice() ? svg("touch") : svg("scroll")}<span>${i18n("home.intro.scroll")}</span></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="secondary">
-                    <div class="links">
-                        <div data-href="https://github.com/thirdless" data-target="_blank">${svg("github")}</div>
-                        <div data-href="https://steamcommunity.com/id/smuwn" data-target="_blank">${svg("steam")}</div>
-                        <div data-href="https://open.spotify.com/user/smuwn" data-target="_blank">${svg("spotify")}</div>
-                        <div data-href="https://twitter.com/game4ro" data-target="_blank">${svg("twitter")}</div>
-                    </div>
                     <div class="desc">
                         <div>
                             <p></p>
@@ -848,7 +947,7 @@
                         </div>
                     </div>
                     <div class="skills">
-                        <h1>Some things I can do better</h1>
+                        <h1>${i18n("home.skills.title")}</h1>
                         <div>
                             <p class="g">HTML</p>
                             <p class="g">CSS3</p>
@@ -867,18 +966,27 @@
                             <p class="b">CoffeeScript</p>
                         </div>
                         <span></span>
-                        <h2>^ The "the farthest, the more-suckness" spectrum.</h2>
+                        <h2>^ ${i18n("home.skills.footer")}</h2>
                     </div>
                     <div class="contact">
-                        <p>For collaborations, questions or freelance projects, contact me via:</p>
-                        <p>${svg("discord")}Discord at <span>smuwn#9706</span></p>
-                        <p data-href="mailto:me@smuwn.xyz">${svg("email")}Email at <span>me@smuwn.xyz</span></p>
+                        <p>${i18n("home.contact.title")}</p>
+                        <p>${svg("discord") + i18n("home.contact.text").replace("%s1%", "Discord").replace("%s2%", "<span>smuwn#9706</span>")}</p>
+                        <p data-href="mailto:me@smuwn.xyz">${svg("email") + i18n("home.contact.text").replace("%s1%", "Email").replace("%s2%", "<span>me@smuwn.xyz</span>")}</p>
                     </div>
                 </div>
-                <div class="next" data-href="/work">
-                  <div>
-                    My work. ${svg("nextarrow")}
-                  </div>
+                <div class="footer">
+                    <div class="next" data-href="/work">
+                      <div>
+                        ${i18n("home.next.work") + " " + svg("nextarrow")}
+                      </div>
+                    </div>
+                    <div class="bottom">
+                        <div data-href="https://github.com/thirdless" data-target="_blank">${svg("github")}</div>
+                        <div data-href="https://open.spotify.com/user/smuwn" data-target="_blank">${svg("spotify")}</div>
+                        <div data-href="https://steamcommunity.com/id/smuwn" data-target="_blank">${svg("steam")}</div>
+                        <div data-href="https://twitter.com/game4ro" data-target="_blank">${svg("twitter")}</div>
+                        <div class="lang drop"></div>
+                    </div>
                 </div>
                 `;
 
@@ -887,8 +995,8 @@
         homeelement.innerHTML = content;
         root.appendChild(homeelement);
 
-        createlines(hometext, querySelector(homeelement, ".text"));
-        homeaboutlines(hometext1, hometext2, querySelectorAll(homeelement, ".secondary .desc p"));
+        createlines(i18n("home.intro.text"), querySelector(homeelement, ".text"));
+        homeaboutlines(i18n("home.desc.1"), i18n("home.desc.2"), querySelectorAll(homeelement, ".secondary .desc p"));
 
         window.addEventListener("resize", homelinesresize);
 
@@ -912,6 +1020,7 @@
             homesetnext(querySelector(homeelement, ".next"), 5000);
             musicinit();
             showmusicbutton();
+            homemultilang();
 
             delay(function(){
                 transition = false;
@@ -1453,7 +1562,18 @@
     }
 
     function dom(){
+        if(inframe()) errorshow("<h1>Please enter this webpage directly from the browser</h1>This page cannot be accessed in frames.");
+
         createLoading();
+
+        let locallang = localStorage.getItem(langname);
+
+        if(locallang in translations) currentlang = locallang;
+        else{
+            let lang = navigator.language.split(",")[0].split("-")[0].toLowerCase();
+            if(lang in translations) currentlang = lang;
+            else currentlang = "en";
+        }
 
         root = $("body>.root")[0];
         canvas = createElement("canvas");
@@ -1479,7 +1599,7 @@
         scrollingelement = document.scrollingElement || document.documentElement;
         scrollingframe = window;
 
-        smoothscroll(scrollingelement, 70, 10);
+        smoothscroll(scrollingelement, 50, 10);
         touchenable();
 
         if(!navigated) changestatus(false);
