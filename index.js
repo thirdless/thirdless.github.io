@@ -1212,7 +1212,7 @@
             if(!musicstatus.forthbutton) musicminibuttons.next.classList.add("disabled");
             else musicminibuttons.next.classList.remove("disabled");
 
-            querySelector(musicmini, ".image").style.setProperty("--image-url", "url(" + song.pic + ")");
+            querySelector(musicmini, ".image").style.backgroundImage = "url(" + song.pic + ")";
         }
     }
 
@@ -1302,7 +1302,8 @@
     }
 
     let musicmini,
-        musicminibuttons = {};
+        musicminibuttons = {},
+        musicminitimeout;
 
     function musicminiupdate(){
         let current = musicsettings.songplaying,
@@ -1310,7 +1311,29 @@
             image = song.pic,
             musicimg = querySelector(musicmini, ".image");
 
-        musicimg.style.setProperty("--image-url", "url(" + image + ")");
+        musicimg.style.backgroundImage = "url(" + song.pic + ")";
+    }
+
+    function musicminiclose(){
+        if(!musicmini) return;
+        if(typeof musicminitimeout === "number") clearTimeout(musicminitimeout);
+        musicmini.classList.remove("show");
+        delay(function(){
+            document.body.removeChild(musicmini);
+            musicmini = null;
+        }, 300);
+    }
+
+    function musicminitoggle(){
+        musictoggle();
+
+        if(!musicsettings.playing){
+            musicminitimeout = delay(function(){
+                musicminitimeout = null;
+                musicminiclose();
+            }, 10000);
+        }
+        else if(typeof musicminitimeout === "number") clearTimeout(musicminitimeout);
     }
 
     function musicminiopen(){
@@ -1333,7 +1356,7 @@
         musicnext.innerHTML = svg("musicforth");
 
         image.addEventListener("click", musicopen);
-        play.addEventListener("click", musictoggle);
+        play.addEventListener("click", musicminitoggle);
         musicnext.addEventListener("click", function(){
             musicchange(null, 1);
         });
@@ -1362,6 +1385,8 @@
 
     function musicopen(){
         if(musicopened) return;
+
+        musicminiclose();
 
         let overlay = createElement(),
             div = createElement();
@@ -1411,10 +1436,7 @@
     }
 
     function musicparse(response){
-        let string = '[{"n":"Arilena Ara - Nentori (Bess Remix)","i":"1ZcutmuyNmcHm1uiIvJzcmC_nOhbXDfND"},{"n":"aywy & Ekali - Another Girl","i":"1TYyiPTuIuIqRguwDT3NsKBrGYlHtfNVI"},{"n":"BLR - La Luna","i":"19-A64XAvuYKB1w_iVA0XPtmBDPU0VhPb"},{"n":"Carla\'s Dreams - Te Rog (Pascal Junior Remix)","i":"1sk3jGllwUaAfA7gFYtwhTSGXgmlLTz7z"},{"n":"Childish Gambino - Terrified (Zikomo Remix)","i":"1Pm2HJb_jJCinXQlpjvca1lggPBVTA72u"},{"n":"Destiny\'s Child - Say My Name (Cyril Hahn Remix)","i":"1nHqE_THyHvLMgC4va-doQhTq2WRRLLMS"},{"n":"Faydee - Crazy (Robert Cristian Remix)","i":"1YpUbNIkoZfDrpe3dIXdBN6G8AFvSyqBR"},{"n":"Giraffe Squad - Wait For Me","i":"1-FQMyqagvaklYolpli0M1XjkyK__ADrk"},{"n":"Illenium - I\'ll Be Your Reason","i":"1-cfF6Xmz2hV8Q6elWCYcxC7_YLFw4pLd"},{"n":"joji - will he (medasin remix)","i":"1OALjtVulnv2dDgPIZmP2z5Dzrnk54mqk"},{"n":"Lana Del Rey - Blue Jeans (RAC Remix)","i":"1YGMTq4B8pwXl_ovVQZ6h-Y78WpbuV1h8"},{"n":"Losco - Scriptina","i":"1IKd4GeJCfC0fsPbwAN6O8osUvwXTNbBX"},{"n":"MOSSS - Here if You Want (Pale Blue)","i":"1tzODXbHWgTxsiO4E5cqfrJvPDvECVUPA"},{"n":"Rihanna - Pon De Replay (Ed Marquis & Emie Cover)","i":"1wP5UbF6fgEmoze_5E1YN0PpqPZD423ZA"},{"n":"RÜFÜS - Say A Prayer For Me","i":"1xjs-E9ih7MQTW6U7AMTBO8kXrqKi0oz0"},{"n":"Tchami feat. Illangelo & Chuck Ellis - Alone","i":"1NWn-aPFg20rzWKJTdOW2RzfxJuUKQ9g_"},{"n":"Tinie Tempah - Not Letting Go ft. Jess Glynne (XYconstant Remix)","i":"16mLVli_Z0zjG_om9W2uD4tDb8kchtu3W"},{"n":"TKDJS - Don\'t Leave","i":"1Hfx447LhPpzddRxCjkr6oqyc-fvwRJoJ"},{"n":"Vanotek Feat. Eneli - Back To Me (Robert Cristian Remix)","i":"123ehBOf9NJWnY4rIOHx-bga10kWbSArD"},{"n":"Vérité - Gesture (BKAYE Remix)","i":"1bqL5jrWfRnt6qnBMFOBSWue22UJCKtxE"}]';
-
         let parsed = JSON.parse(response);
-        console.log(parsed);
 
         for(let i = 0; i < parsed.length; i++){
             let name = parsed[i].n.split(" - "),

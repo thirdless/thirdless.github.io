@@ -77,8 +77,10 @@ body>.font-div{font-family:sans-serif;}
 .main>.intro .header>.menu{text-transform:uppercase;font-weight:700;height:1rem;padding-top:.15rem;box-sizing:border-box;}
 .main>.intro .header>.menu>*,.main>.intro .header>.menu>.music svg{display:inline-block;vertical-align:middle;margin-left:.6rem;}
 .main>.intro .header>.menu>.music svg{height:.7rem;width:.7rem;margin-right:.3rem;}
+.main>.intro .header>.menu>.music{pointer-events:none;}
+.main>.intro .header>.menu>.music.show{pointer-events:initial;}
 .main>.intro .header>.menu>.music,.main>.intro .header>.menu .link{cursor:pointer;transition:.3s cubic-bezier(var(--bezier1),var(--bezier2),var(--bezier3),var(--bezier4));transition-property:opacity,transform,text-shadow;overflow:hidden;padding:0 .25em;}
-.main>.intro .header>.menu>.music>span,.main>.intro .header>.menu .link>span{display:block;position:relative;transform:translate(0,100%);transition:transform .6s cubic-bezier(var(--bezier1),var(--bezier2),var(--bezier3),var(--bezier4));}
+.main>.intro .header>.menu>.music>span,.main>.intro .header>.menu .link>span{display:block;position:relative;transform:translate(0,100%);transition:transform .6s cubic-bezier(var(--bezier1),var(--bezier2),var(--bezier3),var(--bezier4));opacity:0;}
 .main>.intro .header>.menu>.music:hover,.main>.intro .header>.menu .link:hover{transform:translate(0,-.1em);text-shadow:0 0 .5em var(--white), 0 0 .25em var(--white);}
 
 .home>.main>.intro .text{position:relative;margin:0 6.5vw;letter-spacing:.03em;line-height:1.8em;text-align:center;font-family:"PT Serif";}
@@ -218,7 +220,7 @@ body>.font-div{font-family:sans-serif;}
 
 .music-mini{position:fixed;z-index:49;bottom:1rem;right:1rem;color:var(--light-white);cursor:default;overflow:hidden;border-radius:.2rem;opacity:0;transition:opacity .3s cubic-bezier(var(--bezier1),var(--bezier2),var(--bezier3),var(--bezier4));mix-blend-mode:difference;}
 .music-mini>*{display:inline-block;vertical-align:middle;cursor:pointer;}
-.music-mini>.image{position:relative;width:1.8rem;height:1.8rem;background:var(--black);background-image:var(--image-url);background-size:cover;overflow:hidden;border-radius:inherit;opacity:.7;}
+.music-mini>.image{position:relative;width:1.8rem;height:1.8rem;background:var(--black);background-size:cover;overflow:hidden;border-radius:inherit;opacity:.7;}
 .music-mini>.play,.music-mini>.next{height:.85rem;width:.85rem;}
 .music-mini>.play{margin:0 .4rem;}
 .music-mini>.next.disabled{pointer-events:none;opacity:.4;}
