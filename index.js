@@ -1256,7 +1256,7 @@
     function musicplayerinit(){
         musicobject = new Audio();
         musicobject.volume = .6;
-        musicobject.src = musiclink + musicsettings.songlist[musicsettings.songplaying].link + ".mp3";
+        if(musicsettings.songlist.length) musicobject.src = musiclink + musicsettings.songlist[musicsettings.songplaying].link + ".mp3";
         musicplayerdata();
         musicobject.addEventListener("timeupdate", musictimeupdate);
         musicobject.addEventListener("ended", musictimeupdate);
