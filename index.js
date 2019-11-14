@@ -754,7 +754,7 @@
         let element = window.getComputedStyle(querySelector(homeelement,".footer"), ':before'),
             height = parseFloat(element.height, 10),
             width = window.innerWidth,
-            formula = Math.asin(height / Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2))) * 180 / Math.PI;
+            formula = Math.asin(height / Math.sqrt(width * width + height * height)) * 180 / Math.PI;
 
         document.documentElement.style.setProperty("--skew-tilt", formula + "deg");
     }
@@ -1054,7 +1054,7 @@
     function createWork(){}
     function destroyWork(){}
 
-    function create404(){createHome();}
+    function create404(){console.log("404");createHome();}
     function destroy404(){destroyHome();}
 
 
@@ -1467,6 +1467,24 @@
     }
 
 
+    // reveal frame
+
+    function createreveal(dir){
+        // dir = 0 - below to center
+        //     = 1 - center to above
+        let div = createElement("div");
+        div.className = "reveal-frame";
+
+        if(!dir) div.classList.add("center");
+        else div.classList.add("up");
+
+        document.body.appendChild(div);
+
+        delay(function(){
+            document.body.removeChild(div);
+        }, transtime);
+    }
+
     // url handling
 
     function getquery(query, param){
@@ -1507,7 +1525,10 @@
 
     function render(pushstate, loading){
         if(transition) return;
-        else if(loading !== false) createLoading();
+        else if(loading !== false){
+            createreveal(1);
+            createLoading();
+        }
 
         transition = true;
         scrollingelement.scrollTop = 0;
@@ -1531,6 +1552,8 @@
         }
 
         transition = true;
+
+        createreveal(0);
 
         if(!status.toString().indexOf(projectstring)) destroyProject();
         else for(let i = 0; i < pages.length; i++){
@@ -1652,7 +1675,7 @@
     }
 
     function dom(){
-        if(inframe()) errorshow("<h1>Please enter this webpage directly from the browser</h1>This page cannot be accessed in frames.");
+        if(inframe()) errorshow("<h1>Please enter this webpage directly from the browser</h1>This page cannot be accessed inside frames.");
 
         createLoading();
 
