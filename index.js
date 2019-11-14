@@ -1023,7 +1023,6 @@
             homesetskew();
             homesetnext(querySelector(homeelement, ".next"), 5000);
             musicinit();
-            showmusicbutton();
             homemultilang();
 
             delay(function(){
@@ -1171,15 +1170,15 @@
         querySelector(musicdiv, ".main>.image>.img").classList.add("show");
     }
 
-    function musicplayerdata(){
+    function musicplayerdata(param){
+        let song = musicsettings.songlist[musicsettings.songplaying];
+
         musicstatus.backbutton = 1;
         musicstatus.forthbutton = 1;
         if(musicsettings.songplaying === 0) musicstatus.backbutton = 0;
         if(musicsettings.songplaying + 1 === musicsettings.songlist.length) musicstatus.forthbutton = 0;
 
         if(musicopened){
-            let song = musicsettings.songlist[musicsettings.songplaying];
-
             if(!musicstatus.backbutton) musicbuttons.back.classList.add("disabled");
             else musicbuttons.back.classList.remove("disabled");
 
@@ -1208,11 +1207,25 @@
 
             musicplayerplay();
         }
+
+        if(musicmini && param !== true){
+            if(!musicstatus.forthbutton) musicminibuttons.next.classList.add("disabled");
+            else musicminibuttons.next.classList.remove("disabled");
+
+            querySelector(musicmini, ".image").style.setProperty("--image-url", "url(" + song.pic + ")");
+        }
     }
 
     function musicplayerplay(){
-        if(musicsettings.playing) musicbuttons.play.innerHTML = svg("pause");
-        else musicbuttons.play.innerHTML = svg("play");
+        if(musicopened){
+            if(musicsettings.playing) musicbuttons.play.innerHTML = svg("pause");
+            else musicbuttons.play.innerHTML = svg("play");
+        }
+
+        if(musicmini){
+            if(musicsettings.playing) musicminibuttons.play.innerHTML = svg("pause");
+            else musicminibuttons.play.innerHTML = svg("play");
+        }
     }
 
     function musicplayertime(){
@@ -1253,7 +1266,7 @@
     function musictoggle(param){
         if(typeof musicobject === "undefined") musicplayerinit();
 
-        if(param === 0 || (typeof param === "undefined" && musicsettings.playing)){
+        if(param === 0 || (typeof param !== "number" && musicsettings.playing)){
             musicobject.pause();
             musicsettings.playing = 0;
         }
@@ -1288,7 +1301,8 @@
         else if(e.currentTarget === musicbuttons.forth) musicchange(null, 1);
     }
 
-    let musicmini;
+    let musicmini,
+        musicminibuttons = {};
 
     function musicminiupdate(){
         let current = musicsettings.songplaying,
@@ -1296,18 +1310,14 @@
             image = song.pic,
             musicimg = querySelector(musicmini, ".image");
 
-        musicimg.style.backgroundImage = "url(" + image + ")";
+        musicimg.style.setProperty("--image-url", "url(" + image + ")");
     }
 
     function musicminiopen(){
         if(musicmini) return;
         musicmini = createElement();
         musicmini.className = "music-mini";
-        // musicmini.innerHTML = `
-        //     <div class="image"></div>
-        //     <div class="play">${svg("pause")}</div>
-        //     <div class="next">${svg("musicforth")}</div>
-        // `;
+
         let image = createElement(),
             play = createElement(),
             musicnext = createElement();
@@ -1316,12 +1326,17 @@
         play.className = "play";
         musicnext.className = "next";
 
+        musicminibuttons.play = play;
+        musicminibuttons.next = musicnext;
+
         play.innerHTML = svg("pause");
         musicnext.innerHTML = svg("musicforth");
 
         image.addEventListener("click", musicopen);
         play.addEventListener("click", musictoggle);
-        musicnext.addEventListener("click", musicchange);
+        musicnext.addEventListener("click", function(){
+            musicchange(null, 1);
+        });
 
         musicmini.appendChild(image);
         musicmini.appendChild(play);
@@ -1386,7 +1401,7 @@
 
         musicopened = 1;
         musicupdatelist();
-        musicplayerdata();
+        musicplayerdata(true);
 
         querySelector(musicdiv, ".close").addEventListener("click", musicclose);
         slowdom(musicdiv);
@@ -1395,10 +1410,11 @@
         overlay.classList.add("show");
     }
 
-    function musicparse(){
+    function musicparse(response){
         let string = '[{"n":"Arilena Ara - Nentori (Bess Remix)","i":"1ZcutmuyNmcHm1uiIvJzcmC_nOhbXDfND"},{"n":"aywy & Ekali - Another Girl","i":"1TYyiPTuIuIqRguwDT3NsKBrGYlHtfNVI"},{"n":"BLR - La Luna","i":"19-A64XAvuYKB1w_iVA0XPtmBDPU0VhPb"},{"n":"Carla\'s Dreams - Te Rog (Pascal Junior Remix)","i":"1sk3jGllwUaAfA7gFYtwhTSGXgmlLTz7z"},{"n":"Childish Gambino - Terrified (Zikomo Remix)","i":"1Pm2HJb_jJCinXQlpjvca1lggPBVTA72u"},{"n":"Destiny\'s Child - Say My Name (Cyril Hahn Remix)","i":"1nHqE_THyHvLMgC4va-doQhTq2WRRLLMS"},{"n":"Faydee - Crazy (Robert Cristian Remix)","i":"1YpUbNIkoZfDrpe3dIXdBN6G8AFvSyqBR"},{"n":"Giraffe Squad - Wait For Me","i":"1-FQMyqagvaklYolpli0M1XjkyK__ADrk"},{"n":"Illenium - I\'ll Be Your Reason","i":"1-cfF6Xmz2hV8Q6elWCYcxC7_YLFw4pLd"},{"n":"joji - will he (medasin remix)","i":"1OALjtVulnv2dDgPIZmP2z5Dzrnk54mqk"},{"n":"Lana Del Rey - Blue Jeans (RAC Remix)","i":"1YGMTq4B8pwXl_ovVQZ6h-Y78WpbuV1h8"},{"n":"Losco - Scriptina","i":"1IKd4GeJCfC0fsPbwAN6O8osUvwXTNbBX"},{"n":"MOSSS - Here if You Want (Pale Blue)","i":"1tzODXbHWgTxsiO4E5cqfrJvPDvECVUPA"},{"n":"Rihanna - Pon De Replay (Ed Marquis & Emie Cover)","i":"1wP5UbF6fgEmoze_5E1YN0PpqPZD423ZA"},{"n":"RÜFÜS - Say A Prayer For Me","i":"1xjs-E9ih7MQTW6U7AMTBO8kXrqKi0oz0"},{"n":"Tchami feat. Illangelo & Chuck Ellis - Alone","i":"1NWn-aPFg20rzWKJTdOW2RzfxJuUKQ9g_"},{"n":"Tinie Tempah - Not Letting Go ft. Jess Glynne (XYconstant Remix)","i":"16mLVli_Z0zjG_om9W2uD4tDb8kchtu3W"},{"n":"TKDJS - Don\'t Leave","i":"1Hfx447LhPpzddRxCjkr6oqyc-fvwRJoJ"},{"n":"Vanotek Feat. Eneli - Back To Me (Robert Cristian Remix)","i":"123ehBOf9NJWnY4rIOHx-bga10kWbSArD"},{"n":"Vérité - Gesture (BKAYE Remix)","i":"1bqL5jrWfRnt6qnBMFOBSWue22UJCKtxE"}]';
 
-        let parsed = JSON.parse(string);
+        let parsed = JSON.parse(response);
+        console.log(parsed);
 
         for(let i = 0; i < parsed.length; i++){
             let name = parsed[i].n.split(" - "),
@@ -1410,20 +1426,20 @@
 
         shuffle(musicsettings.songlist);
         musicplayerinit();
+        showmusicbutton();
         musicinitialized = true;
     }
 
     function musicinit(){
         if(musicinitialized) return;
-        // let request = new XMLHttpRequest();
-        // request.open("GET", "/music/list.json", true);
-        // request.onreadystatechange = function(){
-        //     if(this.readyState === 4 && this.status === 200){
-        //         //musicparse();
-        //     }
-        // }
-        // request.send();
-        musicparse();
+        let request = new XMLHttpRequest();
+        request.open("GET", "/music/list.json", true);
+        request.onreadystatechange = function(){
+            if(this.readyState === 4 && this.status === 200){
+                musicparse(this.responseText);
+            }
+        }
+        request.send();
     }
 
 
