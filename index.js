@@ -135,7 +135,7 @@
             "home.intro.scroll": "Scroll down"
         },
         ro: {
-            "home.intro.text": "Sunt Ioan, un student din România. Cel mai mult programând, ascultând muzică, făcând sport și alte fleacuri. Uriaș fan al tehnologiei și al basului, jucându-mă cu diferite aspecte ale programării și designului, ținând seamă în munca mea și de eficiență și minimalism.",
+            "home.intro.text": "Sunt Ioan, un student din România. Cel mai mult programând, ascultând muzică, făcând sport și alte fleacuri. Fan al tehnologiei și al basului, jucându-mă cu diferite aspecte ale programării și designului, ținând seamă în munca mea și de eficiență și minimalism.",
             "home.desc.1": "Bună, sunt Ioan, am 19 ani și sunt student la \"Automatică și Calculatoare\" în România. Concentrându-mă cel mai mult pe partea de dezvoltare front-end, dar și pe back-end, software, servere, rețele și ocazional muncind și la unele librării micuțe cu sursă deschisă, dar și alte proiecte \"for-fun\".",
             "home.desc.2": "Câteodată îmi place să fiu competitiv și asta rezumă destul de mult gusturile mele în materie de activități. Tinzând să ascult muzică de fiecare dată când fac ceva, nu am un gen favorit, dar preferatele mele ar fi rock și electronică - EDM, House, ce-o fi. Merită menționat și că am jucat tenis în trecut, și acum încerc să învăț să cânt la chitară și să vorbesc rusa, deși nu sunt așa de relevante.",
             "home.skills.title": "Câteva lucruri la care mă descurc binișor",
@@ -468,6 +468,10 @@
             localStorage.setItem(langname, target);
             location.reload();
         }
+    }
+
+    function scrollbar(){
+
     }
 
     // page content manager
@@ -1284,6 +1288,50 @@
         else if(e.currentTarget === musicbuttons.forth) musicchange(null, 1);
     }
 
+    let musicmini;
+
+    function musicminiupdate(){
+        let current = musicsettings.songplaying,
+            song = musicsettings.songlist[current],
+            image = song.pic,
+            musicimg = querySelector(musicmini, ".image");
+
+        musicimg.style.backgroundImage = "url(" + image + ")";
+    }
+
+    function musicminiopen(){
+        if(musicmini) return;
+        musicmini = createElement();
+        musicmini.className = "music-mini";
+        // musicmini.innerHTML = `
+        //     <div class="image"></div>
+        //     <div class="play">${svg("pause")}</div>
+        //     <div class="next">${svg("musicforth")}</div>
+        // `;
+        let image = createElement(),
+            play = createElement(),
+            musicnext = createElement();
+
+        image.className = "image";
+        play.className = "play";
+        musicnext.className = "next";
+
+        play.innerHTML = svg("pause");
+        musicnext.innerHTML = svg("musicforth");
+
+        image.addEventListener("click", musicopen);
+        play.addEventListener("click", musictoggle);
+        musicnext.addEventListener("click", musicchange);
+
+        musicmini.appendChild(image);
+        musicmini.appendChild(play);
+        musicmini.appendChild(musicnext);
+        document.body.appendChild(musicmini);
+        slowdom();
+        musicmini.classList.add("show");
+        musicminiupdate();
+    }
+
     function musicclose(e){
         e.currentTarget.removeEventListener("click", musicclose);
         musicdiv.classList.remove("show");
@@ -1292,6 +1340,8 @@
             musicdiv.parentNode.removeChild(musicdiv);
             musicoverlay.parentNode.removeChild(musicoverlay);
             musicopened = false;
+
+            if(musicsettings.playing) musicminiopen();
         }, 400);
     }
 
