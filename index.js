@@ -1256,7 +1256,7 @@
     function musicplayerinit(){
         musicobject = new Audio();
         musicobject.volume = .6;
-        if(musicsettings.songlist.length) musicobject.src = musiclink + musicsettings.songlist[musicsettings.songplaying].link + ".mp3";
+        musicobject.src = musiclink + musicsettings.songlist[musicsettings.songplaying].link + ".mp3";
         musicplayerdata();
         musicobject.addEventListener("timeupdate", musictimeupdate);
         musicobject.addEventListener("ended", musictimeupdate);
@@ -1437,6 +1437,8 @@
 
     function musicparse(response){
         let parsed = JSON.parse(response);
+
+        if(!parsed.length) return;
 
         for(let i = 0; i < parsed.length; i++){
             let name = parsed[i].n.split(" - "),
