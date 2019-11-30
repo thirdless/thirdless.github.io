@@ -545,6 +545,7 @@
     }
 
     function scrollbar_mousedown(e){
+        e.preventDefault();
         scrollbardrag = true;
         scrollbarmouse = e.clientY;
         scrollbarcoords = scrollbarcurrent;
