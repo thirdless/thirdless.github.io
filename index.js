@@ -496,7 +496,6 @@
     }
 
     function scrollbarshow(e){
-        console.log(e.clientX);
         if(e.clientX / canvaswidth > 0.9){
             scrollbarthumb.classList.add("show");
             scrollbarhover = 1;
@@ -509,6 +508,7 @@
     }
 
     function scrollbaralign(y){
+        console.log(y);
         scrollbarthumb.style.transform = "translate(0px," + y + "px)";
         scrollbarcurrent = y;
     }
