@@ -531,7 +531,7 @@
 
     function scrollbar_element(){
         //NOTE remove 404
-        if(status === "home" || status === 404){
+        if((status === "home" || status === 404) && homeelement){
             let els = homeelement.children;
             scrollbar_parentsize = 0;
             for(let i = 0; i < els.length; i++){
@@ -566,7 +566,10 @@
         //let height = Math.max(canvasheight / 10, Math.pow(canvasheight, 2) / scrollingelement.offsetHeight);
         scrollbar_element();
 
-        let height = Math.max(canvasheight / 10, canvasheight / (scrollbar_parentsize / canvasheight));
+        let height;
+        if(canvasheight === scrollbar_parentsize) height = 0;
+        else height = Math.max(canvasheight / 10, canvasheight / (scrollbar_parentsize / canvasheight));
+
         scrollbarthumb.style.height = height + "px";
         scrollbarsize = height;
         scrollbarpadding = parseFloat(window.getComputedStyle(scrollbarthumb.parentNode).paddingTop);
@@ -1701,6 +1704,7 @@
         transition = true;
 
         createreveal(0);
+        scrollbarresize();        
 
         if(!status.toString().indexOf(projectstring)) destroyProject();
         else for(let i = 0; i < pages.length; i++){
