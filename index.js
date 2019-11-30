@@ -1155,6 +1155,7 @@
 
         deleteLoading(function(){
 
+            createreveal(1);
             homeelement.classList.add("show");
 
             home.overlayelement = querySelector(homeelement, ".home-overlay");
@@ -1676,8 +1677,8 @@
     function render(pushstate, loading){
         if(transition) return;
         else if(loading !== false){
-            createreveal(1);
             createLoading();
+            scrollbarresize();
         }
 
         transition = true;
@@ -1703,8 +1704,7 @@
 
         transition = true;
 
-        createreveal(0);
-        scrollbarresize();        
+        createreveal(0);        
 
         if(!status.toString().indexOf(projectstring)) destroyProject();
         else for(let i = 0; i < pages.length; i++){
