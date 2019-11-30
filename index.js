@@ -154,7 +154,7 @@
     // main definitions
 
     function querySelector(el, cls){
-        return el.querySelector(cls);
+        return el.querySelector(cls) || createElement("div");
     }
     function querySelectorAll(el, cls){
         return el.querySelectorAll(cls);
