@@ -18,6 +18,7 @@
         p = null;
     }
     catch(e){
+        console.log(e);
         errorshow("<h1>Your browser doesn't meet the minimum requirements this site has.</h1>Please update your browser or try another one.");
     }
 
@@ -470,8 +471,127 @@
         }
     }
 
-    function scrollbar(){
+    let scrollbarthumb,
+        scrollbardrag = false,
+        scrollbarmouse = 0,
+        scrollbarcoords = 0,
+        scrollbarcurrent = 0,
+        scrollbarsize = 0,
+        scrollbarpadding = 0,
+        scrollbar_parentsize = 0,
+        scrollbarscrolled = 0,
+        scrollbarscrolleddelay,
+        scrollbarhover = 0;
 
+    function scrollbarshow(e){
+        if(e.clientX / canvaswidth > 0.9){
+            scrollbarthumb.classList.add("show");
+            scrollbarhover = 1;
+        }
+        else if(!scrollbarscrolled){
+            scrollbarthumb.classList.remove("show");
+            scrollbarhover = 0;
+        }
+        else scrollbarhover = 0;
+    }
+
+    function scrollbaralign(y){
+        scrollbarthumb.style.transform = "translate(0px," + y + "px)";
+        scrollbarcurrent = y;
+    }
+
+    function scrollbar_mouseup(e){
+        scrollbardrag = false;
+        document.removeEventListener("mousemove", scrollbar_mousemove);
+        document.removeEventListener("mouseup", scrollbar_mouseup);
+        document.body.style.userSelect = "";
+        return false;
+    }
+
+    function scrollbar_element(){
+        //NOTE remove 404
+        if(status === "home" || status === 404){
+            let els = homeelement.children;
+            scrollbar_parentsize = 0;
+            for(let i = 0; i < els.length; i++){
+                scrollbar_parentsize += els[i].offsetHeight;
+            }
+        }
+        else scrollbar_parentsize = scrollingelement.offsetHeight;
+    }
+
+    function scrollbar_mousemove(e){
+        if(!scrollbardrag) return;
+
+        let y = Math.max(0, Math.min(canvasheight - scrollbarsize - scrollbarpadding, scrollbarcoords + e.clientY - scrollbarmouse));
+        //scrollbaralign(y);
+        scrollingelement.scrollTop = (y / canvasheight) * scrollbar_parentsize;
+        //console.log((y / canvasheight) * scrollingelement.offsetHeight, y / canvasheight, scrollingelement.offsetHeight);
+        return false;
+    }
+
+    function scrollbar_mousedown(e){
+        scrollbardrag = true;
+        scrollbarmouse = e.clientY;
+        scrollbarcoords = scrollbarcurrent;
+        document.addEventListener("mousemove", scrollbar_mousemove);
+        document.addEventListener("mouseup", scrollbar_mouseup);
+        document.body.style.userSelect = "none";
+        return false;
+    }
+
+    function scrollbarresize(){
+        //let height = Math.max(canvasheight / 10, Math.pow(canvasheight, 2) / scrollingelement.offsetHeight);
+        scrollbar_element();
+
+        let height = Math.max(canvasheight / 10, canvasheight / (scrollbar_parentsize / canvasheight));
+        scrollbarthumb.style.height = height + "px";
+        scrollbarsize = height;
+        scrollbarpadding = parseFloat(window.getComputedStyle(scrollbarthumb.parentNode).padding);
+        console.log(height);
+    }
+
+    function scrollbarpeek(){
+        scrollbarscrolled = 1;
+        scrollbarthumb.classList.add("show");
+        if(scrollbarscrolleddelay) clearTimeout(scrollbarscrolleddelay);
+        scrollbarscrolleddelay = delay(function(){
+            scrollbarscrolled = 0;
+            if(!scrollbarhover) scrollbarthumb.classList.remove("show");
+            scrollbarscrolleddelay = null;
+        }, 1000);
+    }
+
+    function scrollbar_scroll(e){
+        let height = (canvasheight - scrollbarpadding) * (scrollingelement.scrollTop / scrollbar_parentsize);
+        scrollbaralign(height);
+        scrollbarpeek();
+    }
+
+    function scrollbar(){
+        scrollbar_element();
+
+        let parent = createElement("div"),
+            thumb = createElement("div"),
+            height = Math.max(canvasheight / 10, Math.pow(canvasheight, 2) / scrollbar_parentsize);
+
+        parent.className = "scrollbar";
+        thumb.className = "thumb";
+        parent.appendChild(thumb);
+        document.body.appendChild(parent);
+
+        scrollbarthumb = thumb;
+
+        scrollingframe.addEventListener("scroll", scrollbar_scroll);
+        scrollbarthumb.addEventListener("mousedown", scrollbar_mousedown);
+        window.addEventListener("resize", scrollbarresize);
+        root.addEventListener("mousemove", scrollbarshow);
+
+        thumb.style.height = height + "px";
+        scrollbarsize = height;
+
+        scrollbarpadding = parseFloat(window.getComputedStyle(parent).padding);
+        //console.log(height,scrollingelement.offsetHeight);
     }
 
     // page content manager
@@ -754,7 +874,7 @@
         let element = window.getComputedStyle(querySelector(homeelement,".footer"), ':before'),
             height = parseFloat(element.height, 10),
             width = window.innerWidth,
-            formula = Math.asin(height / Math.sqrt(width * width + height * height)) * 180 / Math.PI;
+            formula = Math.asin(height / Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2))) * 180 / Math.PI;
 
         document.documentElement.style.setProperty("--skew-tilt", formula + "deg");
     }
@@ -1024,6 +1144,7 @@
             homesetnext(querySelector(homeelement, ".next"), 5000);
             musicinit();
             homemultilang();
+            scrollbarresize();
 
             delay(function(){
                 transition = false;
@@ -1714,6 +1835,7 @@
 
         smoothscroll(scrollingelement, 50, 10);
         touchenable();
+        scrollbar();
 
         if(!navigated) changestatus(false);
     }
