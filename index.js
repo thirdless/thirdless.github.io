@@ -414,7 +414,9 @@
     }
 
     function touchstart(){
+        scrollbarremove();
         document.body.style.overflow = "initial";
+        root.removeEventListener("touchstart", touchstart, {passive: false});
     }
 
     function touchenable(){
@@ -492,7 +494,14 @@
         scrollbarhover = 0;
 
     function scrollbarremove(){
+        scrollingframe.removeEventListener("scroll", scrollbar_scroll);
+        scrollbarthumb.removeEventListener("mousedown", scrollbar_mousedown);
+        window.removeEventListener("resize", scrollbarresize);
+        root.removeEventListener("mousemove", scrollbarshow);
 
+        if(scrollbarscrolleddelay) clearTimeout(scrollbarscrolleddelay);
+        scrollbarthumb.parentNode.outerHTML = "";
+        scrollbarthumb = null;
     }
 
     function scrollbarshow(e){
@@ -541,7 +550,6 @@
         //scrollbaralign(y);
         scrollingelement.scrollTop = (y / canvasheight) * scrollbar_parentsize;
         //console.log((y / canvasheight) * scrollingelement.offsetHeight, y / canvasheight, scrollingelement.offsetHeight);
-        return false;
     }
 
     function scrollbar_mousedown(e){
@@ -552,7 +560,6 @@
         document.addEventListener("mousemove", scrollbar_mousemove);
         document.addEventListener("mouseup", scrollbar_mouseup);
         document.body.style.userSelect = "none";
-        return false;
     }
 
     function scrollbarresize(){
@@ -1853,8 +1860,8 @@
         scrollingframe = window;
 
         smoothscroll(scrollingelement, 50, 10);
-        touchenable();
         scrollbar();
+        touchenable();
 
         if(!navigated) changestatus(false);
     }
