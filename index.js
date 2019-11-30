@@ -1,5 +1,9 @@
 //;(function(){
 
+    // jshint esversion:6
+    // jshint browser:true
+    // jshint node:true
+
     "use strict";
 
     function errorshow(msg){
@@ -149,17 +153,21 @@
             "home.header.work": "Activitate.",
             "home.intro.scroll": "Glisează în jos"
         }
-    }
+    };
 
     // main definitions
 
     function querySelector(el, cls){
         return el.querySelector(cls) || createElement("div");
     }
+
     function querySelectorAll(el, cls){
         return el.querySelectorAll(cls);
     }
-    function $(_){return undefined===_?document:querySelectorAll(document,_)}
+
+    function $(_){
+        return undefined===_?document:querySelectorAll(document,_);
+    }
 
     function createElement(param){
         param = typeof param === "undefined" ? "div" : param;
@@ -168,8 +176,8 @@
 
     function slowdom(el){
         if(!el) el = root;
-        el.offsetWidth;
-        el.getBoundingClientRect();
+        void el.offsetWidth;
+        void el.getBoundingClientRect();
     }
 
     function delay(func, timeout){
@@ -215,7 +223,7 @@
             let t0, t1,
                 t2, x2,
                 d2, i,
-                epsilon = .0000125;
+                epsilon = 0.0000125;
 
             for(t2 = x, i = 0; i < 8; i++){
                 x2 = sampleCurveX(t2) - x;
@@ -237,7 +245,7 @@
                 if(abs(x2 - x) < epsilon) return t2;
                 if(x > x2) t0 = t2;
                 else t1 = t2;
-                t2 = (t1 - t0) * .5 + t0;
+                t2 = (t1 - t0) * 0.5 + t0;
             }
 
             return t2;
@@ -253,8 +261,8 @@
     }
 
     let easing = {
-        ease: bezier(.25, .1, .25, 1),
-        custom: bezier(.4, .3, .2, 1)
+        ease: bezier(0.25, 0.1, 0.25, 1),
+        custom: bezier(0.4, 0.3, 0.2, 1)
     };
 
     function elementVisible(obj){
@@ -367,7 +375,7 @@
             e.preventDefault();
             let delta = normalize(e);
             pos += -delta * speed;
-		    pos = Math.max(0, Math.min(pos, target.scrollHeight - target.clientHeight));
+            pos = Math.max(0, Math.min(pos, target.scrollHeight - target.clientHeight));
             if(!moving) update();
         }
 
@@ -483,7 +491,12 @@
         scrollbarscrolleddelay,
         scrollbarhover = 0;
 
+    function scrollbarremove(){
+
+    }
+
     function scrollbarshow(e){
+        console.log(e.clientX);
         if(e.clientX / canvaswidth > 0.9){
             scrollbarthumb.classList.add("show");
             scrollbarhover = 1;
@@ -572,8 +585,8 @@
         scrollbar_element();
 
         let parent = createElement("div"),
-            thumb = createElement("div"),
-            height = Math.max(canvasheight / 10, Math.pow(canvasheight, 2) / scrollbar_parentsize);
+            thumb = createElement("div");
+        let height = Math.max(canvasheight / 10, Math.pow(canvasheight, 2) / scrollbar_parentsize);
 
         parent.className = "scrollbar";
         thumb.className = "thumb";
@@ -587,10 +600,10 @@
         window.addEventListener("resize", scrollbarresize);
         root.addEventListener("mousemove", scrollbarshow);
 
-        thumb.style.height = height + "px";
-        scrollbarsize = height;
+        //thumb.style.height = height + "px";
+        //scrollbarsize = height;
 
-        scrollbarpadding = parseFloat(window.getComputedStyle(parent).padding);
+        //scrollbarpadding = parseFloat(window.getComputedStyle(parent).padding);
         //console.log(height,scrollingelement.offsetHeight);
     }
 
@@ -746,6 +759,7 @@
 
     function homecircle(){
         let self = this;
+        console.log(self, this);
         self.position = {};
         self.last = {};
 
@@ -753,7 +767,7 @@
         self.position.y = homemedian();
         self.last.x = 0;
         self.last.y = 0;
-        self.transparency = random(.1, .3);
+        self.transparency = random(0.1, 0.3);
         self.size = random(home.factor / 2, home.factor);
         self.color = homecolors[Math.floor(Math.random() * homecolors.length)];
         home.increment++;
@@ -779,7 +793,7 @@
         home.usedmedian = [];
         home.opacity = 0;
         home.position = {x: 0, y: 0};
-        home.entereffect = canvasheight * .3;
+        home.entereffect = canvasheight * 0.3;
 
         home.intropos = 0;
         home.introopacity = 0;
@@ -910,7 +924,7 @@
     function homesetnext(element, time){
         homenexttime = time;
 
-        let div = createElement();
+        let div = createElement(),
             parent = querySelector(element, "div");
 
         div.className = "spinner";
@@ -1162,6 +1176,8 @@
         homeelement.classList.add("hide");
 
         scrollingframe.removeEventListener("scroll", homescroll);
+        scrollingframe.removeEventListener("scroll", homeremovescrollbutton);
+        scrollingframe.removeEventListener("scroll", homedivsscroll);
         deletehomecanvas();
 
         delay(function(){
@@ -1177,6 +1193,9 @@
 
     function create404(){console.log("404");createHome();}
     function destroy404(){destroyHome();}
+
+    function createProject(){}
+    function destroyProject(){}
 
 
     // music functions
@@ -1216,7 +1235,7 @@
             querySelector(homeelement, ".header .music").addEventListener("click", musicopen);
         }
         else if(status === "work"){
-
+            //NOTE finish this
         }
     }
 
@@ -1376,7 +1395,7 @@
 
     function musicplayerinit(){
         musicobject = new Audio();
-        musicobject.volume = .6;
+        musicobject.volume = 0.6;
         musicobject.src = musiclink + musicsettings.songlist[musicsettings.songplaying].link + ".mp3";
         musicplayerdata();
         musicobject.addEventListener("timeupdate", musictimeupdate);
@@ -1583,7 +1602,7 @@
             if(this.readyState === 4 && this.status === 200){
                 musicparse(this.responseText);
             }
-        }
+        };
         request.send();
     }
 
