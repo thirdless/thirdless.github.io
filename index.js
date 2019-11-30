@@ -508,7 +508,6 @@
     }
 
     function scrollbaralign(y){
-        console.log(y);
         scrollbarthumb.style.transform = "translate(0px," + y + "px)";
         scrollbarcurrent = y;
     }
@@ -560,8 +559,7 @@
         let height = Math.max(canvasheight / 10, canvasheight / (scrollbar_parentsize / canvasheight));
         scrollbarthumb.style.height = height + "px";
         scrollbarsize = height;
-        scrollbarpadding = parseFloat(window.getComputedStyle(scrollbarthumb.parentNode).padding);
-        console.log(height);
+        scrollbarpadding = parseFloat(window.getComputedStyle(scrollbarthumb.parentNode).paddingTop);
     }
 
     function scrollbarpeek(){
@@ -576,7 +574,6 @@
     }
 
     function scrollbar_scroll(e){
-        console.log(canvasheight, scrollbarpadding, scrollingelement.scrollTop, scrollbar_parentsize);
         let height = (canvasheight - scrollbarpadding) * (scrollingelement.scrollTop / scrollbar_parentsize);
         scrollbaralign(height);
         scrollbarpeek();
@@ -760,7 +757,6 @@
 
     function homecircle(){
         let self = this;
-        console.log(self, this);
         self.position = {};
         self.last = {};
 
