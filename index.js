@@ -576,6 +576,7 @@
     }
 
     function scrollbar_scroll(e){
+        console.log(canvasheight, scrollbarpadding, scrollingelement.scrollTop, scrollbar_parentsize);
         let height = (canvasheight - scrollbarpadding) * (scrollingelement.scrollTop / scrollbar_parentsize);
         scrollbaralign(height);
         scrollbarpeek();
