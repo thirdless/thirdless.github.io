@@ -345,12 +345,13 @@
         else return div.outerHTML;
     }
 
+    let smoothscrollmoving = false;
+
     function smoothscroll(target, speed, factor){
 
         if(target === document) target = document.documentElement;
 
-        let moving = false,
-            pos = -1;
+        let pos = -1;
 
         function normalize(e){
             if(e.detail){
@@ -363,26 +364,26 @@
         }
 
         function update(){
-            moving = true;
+            smoothscrollmoving = true;
             let delta = (pos - target.scrollTop) / factor;
             //console.log(pos, factor, target.scrollTop, target.scrollHeight - target.clientHeight);
             target.scrollTop += delta;
             if(abs(delta) > 1) requestAnimationFrame(update);
             else{
-                moving = false;
+                smoothscrollmoving = false;
                 pos = -1;
             }
         }
 
         function scrolling(e){
-            if(scrollactive || musicopened) return;
+            if(scrollactive || musicopened || scrollbaranimationopen) return;
             if(pos === -1) pos = target.scrollTop;
 
             e.preventDefault();
             let delta = normalize(e);
             pos += -delta * speed;
             pos = Math.max(0, Math.min(pos, target.scrollHeight - target.clientHeight));
-            if(!moving) update();
+            if(!smoothscrollmoving) update();
         }
 
         target.addEventListener("wheel", scrolling, {passive: false});
@@ -503,7 +504,8 @@
         scrollbar_parentsize = 0,
         scrollbarscrolled = 0,
         scrollbarscrolleddelay,
-        scrollbarhover = 0;
+        scrollbarhover = 0,
+        scrollbardestination = 0;
 
     function scrollbarremove(){
         scrollingframe.removeEventListener("scroll", scrollbar_scroll);
@@ -533,6 +535,22 @@
         scrollbarcurrent = y;
     }
 
+    let scrollbaranimationopen = 0;
+
+    function scrollbaranimationstart(){
+        if(smoothscrollmoving || scrollbaranimationopen) return;
+        scrollbaranimationopen = 1;
+        scrollbaranimation();
+    }
+
+    function scrollbaranimation(){
+        let dest = (scrollbardestination - scrollingelement.scrollTop) / 5;
+        scrollingelement.scrollTop += dest;
+        
+        if(!(Math.abs(dest) < 1)) requestAnimationFrame(scrollbaranimation);
+        else scrollbaranimationopen = 0;
+    }
+
     function scrollbar_mouseup(e){
         scrollbardrag = false;
         document.removeEventListener("mousemove", scrollbar_mousemove);
@@ -559,8 +577,11 @@
         e.preventDefault();
 
         let y = Math.max(0, Math.min(canvasheight - scrollbarsize - scrollbarpadding, scrollbarcoords + e.clientY - scrollbarmouse));
+
+        scrollbardestination = (y / canvasheight) * scrollbar_parentsize;
+        scrollbaranimationstart();
         //scrollbaralign(y);
-        scrollingelement.scrollTop = (y / canvasheight) * scrollbar_parentsize;
+        //scrollingelement.scrollTop = (y / canvasheight) * scrollbar_parentsize;
         //console.log((y / canvasheight) * scrollingelement.offsetHeight, y / canvasheight, scrollingelement.offsetHeight);
     }
 
