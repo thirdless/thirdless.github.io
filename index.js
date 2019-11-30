@@ -4,6 +4,11 @@
     // jshint browser:true
     // jshint node:true
 
+    //NOTE EDGE TESTING
+    //let localStorage = {};
+    //localStorage.getItem = function(){};
+    //localStorage.setItem = function(){};
+
     "use strict";
 
     function errorshow(msg){
@@ -353,13 +358,14 @@
                 else return -e.detail / 3;
             }
             else if(e.wheelDelta && ~navigator.userAgent.indexOf("OPR")) return Math.min(Math.max(e.wheelDelta / 60, -1), 1);
-            else if(e.wheelDelta) return Math.min(Math.max(e.wheelDelta / 360, -1), 1);
-            else return -e.deltaY / 6;
+            else if(e.wheelDelta) return Math.min(Math.max(e.wheelDelta / 120, -1), 1);
+            else return -e.deltaY / 4;
         }
 
         function update(){
             moving = true;
             let delta = (pos - target.scrollTop) / factor;
+            //console.log(pos, factor, target.scrollTop, target.scrollHeight - target.clientHeight);
             target.scrollTop += delta;
             if(abs(delta) > 1) requestAnimationFrame(update);
             else{
@@ -480,6 +486,12 @@
             location.reload();
         }
     }
+
+    function reverse(e){
+        return e.split("").reverse().join("");
+    }
+
+    //scrollbar
 
     let scrollbarthumb,
         scrollbardrag = false,
@@ -815,6 +827,7 @@
 
         for(let i = 0; i < homedensity; i++) homecircles.push(new homecircle());
         homerender();
+        
         homeelement.addEventListener("mousemove", homemouse);
         window.addEventListener("resize", homecanvasresize);
     }
@@ -958,19 +971,17 @@
     }
 
     //NOTE REMOVE AFTER DESTROYING
-    let aboutlines = [];
 
     function homelinesscroll(el){
         let divs = querySelectorAll(el, ".line");
         for(let i = 0; i < divs.length; i++){
-            aboutlines.push(delay(function(){
+            delay(function(){
                 divs[i].classList.add("show");
-            }, i * 100));
+            }, i * 100);
         }
     }
 
-    let introlinestimeouts,
-        scrolldivs,
+    let scrolldivs,
         homedivs;
 
     function homedivsscroll(){
@@ -990,7 +1001,6 @@
         let sec = ".secondary ",
             introlines = querySelectorAll(homeelement, ".intro .line");
 
-        introlinestimeouts = [];
         scrolldivs = [];
 
         homedivs = {
@@ -1001,9 +1011,9 @@
         };
 
         for(let i = 0; i < introlines.length; i++){
-            introlinestimeouts.push(delay(function(){
+            delay(function(){
                 introlines[i].classList.add("show");
-            }, i * 100));
+            }, i * 100);
         }
 
         for(let i in homedivs) scrolldivs.push({el: homedivs[i], top: homedivs[i].getBoundingClientRect().top, height: homedivs[i].offsetHeight});
@@ -1062,7 +1072,8 @@
     }
 
     function createHome(){
-        let content = `
+        let postal = "7E0N4NiJ7kzN4NiJ7gzN4NiJ7UkM4NiJ7UkN4NiJ7czN4NiJ7UzN4NiJ7QkN4NiJ7MzN4NiJ7ADN4NiJ7UjN4NiJ7QkN4NiJ",
+            content = `
                 <div class="main">
                     <div class="effects"></div>
                     <div class="home-overlay"></div>
@@ -1119,7 +1130,7 @@
                     <div class="contact">
                         <p>${i18n("home.contact.title")}</p>
                         <p>${svg("discord") + i18n("home.contact.text").replace("%s1%", "Discord").replace("%s2%", "<span>smuwn#9706</span>")}</p>
-                        <p data-href="mailto:me@smuwn.xyz">${svg("email") + i18n("home.contact.text").replace("%s1%", "Email").replace("%s2%", "<span>me@smuwn.xyz</span>")}</p>
+                        <p data-href="mailto:${atob(reverse(postal))}">${svg("email") + i18n("home.contact.text").replace("%s1%", "Email").replace("%s2%", "<span>" + atob(reverse(postal)) + "</span>")}</p>
                     </div>
                 </div>
                 <div class="footer">
