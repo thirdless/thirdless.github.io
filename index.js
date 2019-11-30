@@ -535,6 +535,8 @@
     function scrollbar_mousemove(e){
         if(!scrollbardrag) return;
 
+        e.preventDefault();
+
         let y = Math.max(0, Math.min(canvasheight - scrollbarsize - scrollbarpadding, scrollbarcoords + e.clientY - scrollbarmouse));
         //scrollbaralign(y);
         scrollingelement.scrollTop = (y / canvasheight) * scrollbar_parentsize;
