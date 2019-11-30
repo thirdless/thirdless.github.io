@@ -24,6 +24,7 @@
         if(!("transform" in p.style) || !("filter" in p.style) || !("classList" in p) || !("requestAnimationFrame" in window) || !("CSS" in window)) throw "stop";
         performance.now();
         localStorage.getItem("test");
+        void `test`;
         p = null;
     }
     catch(e){
