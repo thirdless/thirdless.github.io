@@ -12,7 +12,7 @@
     "use strict";
 
     function errorshow(msg){
-        var error = document.createElement("div");
+        var error = document.createElement();
         error.className = "-error-panel overlay";
         error.innerHTML = "<div>" + msg + "</div>";
         document.body.appendChild(error);
@@ -164,7 +164,7 @@
     // main definitions
 
     function querySelector(el, cls){
-        return el.querySelector(cls) || createElement("div");
+        return el.querySelector(cls) || createElement();
     }
 
     function querySelectorAll(el, cls){
@@ -496,6 +496,7 @@
     //scrollbar
 
     let scrollbarthumb,
+        scrollbarparent,
         scrollbardrag = false,
         scrollbarmouse = 0,
         scrollbarcoords = 0,
@@ -510,12 +511,12 @@
 
     function scrollbarremove(){
         scrollingframe.removeEventListener("scroll", scrollbar_scroll);
-        scrollbarthumb.removeEventListener("mousedown", scrollbar_mousedown);
+        scrollbarparent.removeEventListener("mousedown", scrollbar_mousedown);
         window.removeEventListener("resize", scrollbarresize);
         root.removeEventListener("mousemove", scrollbarshow);
 
         if(scrollbarscrolleddelay) clearTimeout(scrollbarscrolleddelay);
-        scrollbarthumb.parentNode.outerHTML = "";
+        scrollbarparent.outerHTML = "";
         scrollbarthumb = null;
     }
 
@@ -547,6 +548,7 @@
     function scrollbaranimation(){
         let dest = (scrollbardestination - scrollingelement.scrollTop) / 5;
         scrollingelement.scrollTop += dest;
+        console.log(dest)
         
         if(!(Math.abs(dest) < 1)) requestAnimationFrame(scrollbaranimation);
         else scrollbaranimationopen = 0;
@@ -577,7 +579,7 @@
 
         e.preventDefault();
 
-        let y = Math.max(0, Math.min(canvasheight - scrollbarsize - scrollbarpadding, scrollbarcoords + e.clientY - scrollbarmouse));
+        let y = Math.max(0, Math.min(canvasheight - scrollbarsize - scrollbarpadding, scrollbarcoords + e.clientY - scrollbarmouse - scrollbarpadding));
 
         scrollbardestination = (y / canvasheight) * scrollbar_parentsize;
         scrollbaranimationstart();
@@ -606,7 +608,7 @@
 
         scrollbarthumb.style.height = height + "px";
         scrollbarsize = height;
-        scrollbarpadding = parseFloat(window.getComputedStyle(scrollbarthumb.parentNode).paddingTop);
+        scrollbarpadding = parseFloat(window.getComputedStyle(scrollbarparent).paddingTop);
     }
 
     function scrollbarpeek(){
@@ -629,8 +631,8 @@
     function scrollbar(){
         scrollbar_element();
 
-        let parent = createElement("div"),
-            thumb = createElement("div");
+        let parent = createElement(),
+            thumb = createElement();
         let height = Math.max(canvasheight / 10, Math.pow(canvasheight, 2) / scrollbar_parentsize);
 
         parent.className = "scrollbar";
@@ -639,9 +641,10 @@
         document.body.appendChild(parent);
 
         scrollbarthumb = thumb;
+        scrollbarparent = parent;
 
         scrollingframe.addEventListener("scroll", scrollbar_scroll);
-        scrollbarthumb.addEventListener("mousedown", scrollbar_mousedown);
+        scrollbarparent.addEventListener("mousedown", scrollbar_mousedown);
         window.addEventListener("resize", scrollbarresize);
         root.addEventListener("mousemove", scrollbarshow);
 
@@ -1232,11 +1235,44 @@
 
     }
 
-    function createWork(){}
-    function destroyWork(){}
+    let workelement;
 
-    function create404(){console.log("404");createHome();}
-    function destroy404(){destroyHome();}
+    function createWork(){
+
+        let content = `
+            <div class="header">
+                <div class="logo">${svg("smuwn")}</div>
+                <div class="menu">
+                    ${homemenuitem("music", svg("music") + i18n("home.header.music"))}
+                    <div class="separator music-sep"></div>
+                    ${homemenuitem("work link", i18n("home.header.work"), "/work")}
+                    ${homemenuitem("blog link", i18n("home.header.blog"), "https://blog.smuwn.xyz\" data-target=\"_blank")}
+                </div>
+            </div>
+        `;
+
+        workelement = createElement();
+        workelement.className = "work";
+        workelement.innerHTML = content;
+
+        root.appendChild(workelement);
+
+        deleteLoading(function(){
+
+            delay(function(){
+                transition = false;
+            }, transtime);
+        });
+    }
+
+    function destroyWork(){
+        delay(function(){
+            root.removeChild(workelement);
+        }, transtime);
+    }
+
+    function create404(){console.log("404");createWork();}
+    function destroy404(){destroyWork();}
 
     function createProject(){}
     function destroyProject(){}
@@ -1656,7 +1692,7 @@
     function createreveal(dir){
         // dir = 0 - below to center
         //     = 1 - center to above
-        let div = createElement("div");
+        let div = createElement();
         div.className = "reveal-frame";
 
         if(!dir) div.classList.add("center");
