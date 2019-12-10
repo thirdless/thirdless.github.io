@@ -548,7 +548,6 @@
     function scrollbaranimation(){
         let dest = (scrollbardestination - scrollingelement.scrollTop) / 5;
         scrollingelement.scrollTop += dest;
-        console.log(dest)
         
         if(!(Math.abs(dest) < 1)) requestAnimationFrame(scrollbaranimation);
         else scrollbaranimationopen = 0;
