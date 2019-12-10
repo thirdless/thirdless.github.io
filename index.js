@@ -1822,7 +1822,7 @@
             changestatus(
                 query + (search ? changequery(search, "page") : "") + (hash ? hash : "")
             );
-
+            console.log("skip1")
             return;
         }
         else if(!loc.indexOf(projectpath) && loc.length > projectpath.length){
@@ -1832,13 +1832,16 @@
                 found = true;
             }
             else next.status = 404;
+            console.log("skip2")
         }
         else for(let i = 0; i < pages.length; i++){
             if(pages[i].path && checkpath(loc, pages[i].path)){
                 console.log(loc, pages[i].path, checkpath(loc, pages[i].path));
+                console.log("skip3")
                 next.status = pages[i].status;
                 found = true;
             }
+            console.log('skip4')
         }
 
         if(!found) next.status = 404;
