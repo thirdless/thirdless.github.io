@@ -1842,6 +1842,8 @@
 
         if(!found) next.status = 404;
 
+        console.log(found, status, next, query, loc);
+
         next.url = loc + (search ? search : "") + (hash ? hash : "");
 
         let pushstate = e === false || (typeof e === "object" && e.type === "popstate") ? true : false;
