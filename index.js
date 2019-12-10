@@ -1841,7 +1841,7 @@
                 next.status = pages[i].status;
                 found = true;
             }
-            console.log('skip4')
+            console.log('skip4', pages[i].path, loc, pages[i].path, checkpath(loc, pages[i].path))
         }
 
         if(!found) next.status = 404;
