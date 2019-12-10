@@ -1835,6 +1835,7 @@
         }
         else for(let i = 0; i < pages.length; i++){
             if(pages[i].path && checkpath(loc, pages[i].path)){
+                console.log(loc, pages[i].path, checkpath(loc, pages[i].path));
                 next.status = pages[i].status;
                 found = true;
             }
@@ -1842,7 +1843,7 @@
 
         if(!found) next.status = 404;
 
-        console.log(found, status, next, query, loc);
+        console.log(found, status, next, query, loc, );
 
         next.url = loc + (search ? search : "") + (hash ? hash : "");
 
