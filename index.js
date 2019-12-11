@@ -1306,6 +1306,7 @@
 
     //NOTE change from 404 to home
     function showmusicbutton(){
+        if(!musicinitialized) return;
         if(status === "home" || status === 404){
             querySelector(homeelement, ".header .music").classList.add("show");
             querySelector(homeelement, ".header .music-sep").classList.add("show");
@@ -1667,8 +1668,8 @@
 
         shuffle(musicsettings.songlist);
         musicplayerinit();
-        showmusicbutton();
         musicinitialized = true;
+        showmusicbutton();
     }
 
     function musicinit(){
