@@ -1198,7 +1198,7 @@
             homebindbuttons();
             homesetskew();
             homesetnext(querySelector(homeelement, ".next"), 5000);
-            musicinit();
+            showmusicbutton();
             homemultilang();
             scrollbarresize();
 
