@@ -1,9 +1,5 @@
 //;(function(){
 
-    // jshint esversion:6
-    // jshint browser:true
-    // jshint node:true
-
     //NOTE EDGE TESTING
     //let localStorage = {};
     //localStorage.getItem = function(){};
@@ -545,17 +541,16 @@
         scrollbaranimation();
     }
 
-    var lol;
-
     function scrollbaranimation(){
-        let dest = (scrollbardestination - scrollingelement.scrollTop) / 5;
+        let dest = (scrollbardestination - scrollingelement.scrollTop) / 5,
+            mathdest = Math.abs(dest) < 1;
         scrollingelement.scrollTop += dest;
-        
-        if(!(Math.abs(dest) < 1)) requestAnimationFrame(scrollbaranimation);
+
+        if(!mathdest) requestAnimationFrame(scrollbaranimation);
         else scrollbaranimationopen = 0;
     }
 
-    function scrollbar_mouseup(e){
+    function scrollbar_mouseup(){
         scrollbardrag = false;
         document.removeEventListener("mousemove", scrollbar_mousemove);
         document.removeEventListener("mouseup", scrollbar_mouseup);
@@ -623,7 +618,7 @@
         }, 1000);
     }
 
-    function scrollbar_scroll(e){
+    function scrollbar_scroll(){
         let height = (canvasheight - scrollbarpadding) * (scrollingelement.scrollTop / scrollbar_parentsize);
         scrollbaralign(height);
         scrollbarpeek();
@@ -634,7 +629,7 @@
 
         let parent = createElement(),
             thumb = createElement();
-        let height = Math.max(canvasheight / 10, Math.pow(canvasheight, 2) / scrollbar_parentsize);
+        //let height = Math.max(canvasheight / 10, Math.pow(canvasheight, 2) / scrollbar_parentsize);
 
         parent.className = "scrollbar";
         thumb.className = "thumb";
@@ -690,8 +685,7 @@
             {r: 69, g: 39, b: 160}
         ];
 
-    let homeelement,
-        hometextlines;
+    let homeelement;
 
     function homeapplyintro(){
         home.introdiv.style.transform = "translate3d(" + home.intro.x + "px, " + home.intro.y + "px, " + home.intro.z + "px)";
@@ -853,7 +847,7 @@
 
         for(let i = 0; i < homedensity; i++) homecircles.push(new homecircle());
         homerender();
-        
+
         homeelement.addEventListener("mousemove", homemouse);
         window.addEventListener("resize", homecanvasresize);
     }
@@ -1531,7 +1525,7 @@
     function musicminiupdate(){
         let current = musicsettings.songplaying,
             song = musicsettings.songlist[current],
-            image = song.pic,
+            //image = song.pic,
             musicimg = querySelector(musicmini, ".image");
 
         musicimg.style.backgroundImage = "url(" + song.pic + ")";
@@ -1776,7 +1770,7 @@
 
         transition = true;
 
-        createreveal(0);        
+        createreveal(0);
 
         if(!status.toString().indexOf(projectstring)) destroyProject();
         else for(let i = 0; i < pages.length; i++){
