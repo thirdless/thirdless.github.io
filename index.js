@@ -1306,7 +1306,6 @@
 
     //NOTE change from 404 to home
     function showmusicbutton(){
-        console.log("showmusic");
         if(!musicinitialized) return;
         if(status === "home" || status === 404){
             querySelector(homeelement, ".header .music").classList.add("show");
@@ -1674,7 +1673,6 @@
     }
 
     function musicinit(){
-        console.log(status, "musicinit");
         if(musicinitialized) return;
         let request = new XMLHttpRequest();
         request.open("GET", "/music/list.json", true);
