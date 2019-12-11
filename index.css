@@ -152,7 +152,7 @@ body>.font-div{font-family:sans-serif;}
 .home.show>.footer,.home.show>.secondary{opacity:1;}
 
 .home>.footer{position:relative;background:var(--white);color:var(--black);text-align:center;z-index:3;}
-.home>.footer::before{content:"";position:absolute;z-index:-1;background:inherit;bottom:100%;height:1rem;left:0;right:0;transform:translate(0,50%) skew(0,var(--skew-tilt));}
+.home>.footer::before{content:"";position:absolute;z-index:-1;background:inherit;bottom:100%;height:1rem;left:0;right:0;transform:translate(0,calc(50% + 1px)) skew(0,var(--skew-tilt));}
 
 .home>.footer>.next{cursor:pointer;}
 .home>.footer>.next>div{position:relative;display:inline-block;font-size:2rem;font-weight:bold;vertical-align:middle;margin:2em 0;}
