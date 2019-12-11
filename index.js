@@ -545,6 +545,8 @@
         scrollbaranimation();
     }
 
+    var lol;
+
     function scrollbaranimation(){
         let dest = (scrollbardestination - scrollingelement.scrollTop) / 5;
         scrollingelement.scrollTop += dest;
@@ -1257,6 +1259,8 @@
         root.appendChild(workelement);
 
         deleteLoading(function(){
+
+            createreveal(1);
 
             delay(function(){
                 transition = false;
