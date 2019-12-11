@@ -1306,6 +1306,7 @@
 
     //NOTE change from 404 to home
     function showmusicbutton(){
+        console.log("showmusic")
         if(!musicinitialized) return;
         if(status === "home" || status === 404){
             querySelector(homeelement, ".header .music").classList.add("show");
