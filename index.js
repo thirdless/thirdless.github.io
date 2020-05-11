@@ -1268,8 +1268,8 @@
         }, transtime);
     }
 
-    function create404(){console.log("404");createWork();}
-    function destroy404(){destroyWork();}
+    function create404(){console.log("404");createHome();}
+    function destroy404(){destroyHome();}
 
     function createProject(){}
     function destroyProject(){}
