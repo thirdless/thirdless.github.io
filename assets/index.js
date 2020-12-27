@@ -93,13 +93,20 @@ function getFrameRate(e){
     else vFrameDuration = [];
 
     if(vFrameDuration.length != 2) requestAnimationFrame(getFrameRate);
-    else vFrameDuration = vFrameDuration[1] - vFrameDuration[0];
+    else{
+        vFrameDuration = vFrameDuration[1] - vFrameDuration[0];
+        console.log("Initial time between frames:", vFrameDuration);
+    }
 }
 
 function timeout(func, duration){
     if(duration == null) duration = vFrameDuration;
 
     return setTimeout(func, duration);
+}
+
+function random(a, b){
+    return Math.random() * (b - a) + a;
 }
 
 function bezier(p1x, p1y, p2x, p2y){
@@ -166,21 +173,6 @@ let easing = {
     custom: bezier(0.4, 0.3, 0.2, 1)
 };
 
-//TO DO
-/*function scrollTo(y){
-    if(typeof y !== "number") y = 0;
-    vScrollingElement.scrollTop = y;
-}
-
-function centerOnElement(element){
-    //TO DO
-    // let bounding = element.getBoundingClientRect(),
-    //     value = vScrollingElement.scrollTop + bounding.top + ((window.innerHeight - bounding.height) / 2);
-
-    // scrollTo(value);
-}*/
-
-
 function createElement(type = "div", parent, className){
     let div = document.createElement(type);
 
@@ -202,7 +194,7 @@ function svg(id, asElement){
     else return div.outerHTML;
 }
 
-function slowdom(el){
+function redrawDOM(el){
     if(!el) el = vRoot;
     void el.offsetWidth;
     void el.getBoundingClientRect();
@@ -234,7 +226,7 @@ function smoothScrollTo(yPos, duration = 1000, callback){
             });
             return;
         }
-        else console.log(Math.abs(vScrollingElement.scrollTop - yPos), time, startPos, yPos);
+        //else console.log(Math.abs(vScrollingElement.scrollTop - yPos), time, startPos, yPos);
 
         requestAnimationFrame(scrolling);
     }
@@ -252,7 +244,7 @@ function smoothWheel(e){
     if(vScrollingFunctionActive) e.preventDefault();
 }
 
-function genericSocial_create(name, link, className){
+function createGenericSocial(name, link, className){
     let el = createElement("a");
     el.href = link;
     el.className = "generic-social";
@@ -263,7 +255,7 @@ function genericSocial_create(name, link, className){
     return el.outerHTML;
 }
 
-function genericLink_create(text, link, className){
+function createGenericLink(text, link, className){
     let el = createElement("a");
     el.href = link;
     el.className = "generic-link";
@@ -275,12 +267,12 @@ function genericLink_create(text, link, className){
 }
 
 
-function header_create(page, parent){
+function headerCreate(page, parent){
     let element = createElement("div", parent, "header"),
         link;
 
-    if(page == "home") link = genericLink_create("Projects", "/projects");
-    else link = genericLink_create("About", "/");
+    if(page == "home") link = createGenericLink("Projects", "/projects");
+    else link = createGenericLink("About", "/");
 
     let content = `
         <div class="logo">${svg("logo-big")}</div>
@@ -296,17 +288,17 @@ function header_create(page, parent){
     return element;
 }
 
-function get_socials(){
+function getSocials(){
     return `
-        ${genericSocial_create("github", "https://github.com/thirdless")}
-        ${genericSocial_create("spotify", "http://open.spotify.com/user/smuwn")}
-        ${genericSocial_create("steam", "http://steamcommunity.com/id/smuwn")}
+        ${createGenericSocial("github", "https://github.com/thirdless")}
+        ${createGenericSocial("spotify", "http://open.spotify.com/user/smuwn")}
+        ${createGenericSocial("steam", "http://steamcommunity.com/id/smuwn")}
     `;
 }
 
 let vFooterTop;
 
-function footer_create(parent){
+function footerCreate(parent){
     let element = createElement("div", parent, "footer"),
         content = `
             <div class="content">
@@ -319,7 +311,7 @@ function footer_create(parent){
                 </div>
                 <div class="right">
                     <p>Follow me</p>
-                    ${get_socials()}
+                    ${getSocials()}
                     <h3 class="generic-link">${svg("arrow-up")} Back to top</h3>
                 </div>
                 <span>This site stores no cookies except the Github Pages ones or the PHP Session mandatory ones which I cannot control.</span>
@@ -334,17 +326,208 @@ function footer_create(parent){
     return element;
 }
 
-let vRoot,
-    vScrollingElement;
+let blurElement;
 
-function home_load(){
+function createBlurSVG(){
+    let namespace = "http://www.w3.org/2000/svg",
+        create = type => document.createElementNS(namespace, type),
+        svg = create("svg"),
+        defs = create("defs"),
+        filter = create("filter"),
+        blur = create("feGaussianBlur");
+
+
+    svg.appendChild(defs);
+    defs.appendChild(filter);
+    filter.appendChild(blur);
+
+    filter.setAttribute("id", "motionBlur");
+    blur.setAttribute("in", "SourceGraphic");
+    blur.setAttribute("stdDeviation", "0,0");
+
+    blurElement = blur;
+    vRoot.appendChild(svg);
+}
+
+function setBlurAmount(value){
+    blurElement.setAttribute("stdDeviation", "0," + value);
+}
+
+let vRoot,
+    vScrollingElement,
+    vHomeActive = false,
+    vProjectsActive = false;
+
+function movingElements(){
+    let scroll = vScrollingElement.scrollTop;
+
+    gaussianMovement(scroll);
+    blurElements(scroll);
+
+    if(vHomeActive) vHomeScrolled = scroll;
+}
+
+let vBlurLastScroll = 0,
+    vBlurTimeout = 0;
+
+function blurElements(scroll){
+    let MULTIPLIER = 1,
+        value = Math.abs((vBlurLastScroll - scroll) * MULTIPLIER);
+
+    setBlurAmount(value);
+
+    clearTimeout(vBlurTimeout);
+    vBlurTimeout = timeout(function(){
+        setBlurAmount(0);
+    }, 100);
+
+    vBlurLastScroll = scroll;
+}
+
+let vGaussianMovement = [];
+
+function gaussianMovement(scroll){
+    let elementPos,
+        screen = window.innerHeight,
+        range = 0.3 * screen,
+        current;
+
+    for(let i = 0; i < vGaussianMovement.length; i++){
+        current = vGaussianMovement[i];
+
+        //elementPos = Math.max(Math.min(linearMap(current.top - scroll, screen, -current.height, range, -range), range), -range);
+        elementPos = scroll - current.top + (screen - current.height) / 2;
+        elementPos *= -.3;
+
+        current.element.style.transform = "translate(0px, " + elementPos + "px)";
+    }
+}
+
+function addMovingElements(type, elements){
+    if(elements instanceof Node) elements = [elements];
+
+    for(let i = 0; i < elements.length; i++){
+        vGaussianMovement.push({
+            element: elements[i],
+            top: elements[i].getBoundingClientRect().top,
+            height: elements[i].offsetHeight
+        });
+    }
+
+    gaussianMovement(vScrollingElement.scrollTop);
+}
+
+function clearMovingElements(){
+    vGaussianMovement = [];
+}
+
+let CIRCLES_DENSITY = 25,
+    CIRCLES_SIZE_FACTOR = 250,
+    CIRCLES_MOVEMENT_FACTOR = 10,
+    CIRCLES_COLORS = [
+        {r: 229, g: 57, b: 53},
+        {r: 48, g: 63, b: 159},
+        {r: 0, g: 121, b: 107},
+        {r: 85, g: 139, b: 47},
+        {r: 69, g: 39, b: 160}
+    ];
+
+let vHomeCanvas,
+    vHomeContext,
+    vHomeCircles,
+    vHomeScrolled = 0,
+    vCirclesFactor,
+    vCirclesUsedIndexes;
+
+function homeResize(){
+    vHomeCanvas.width = window.innerWidth;
+    vHomeCanvas.height = window.innerHeight;
+}
+
+function homeCircleCreate(){
+    let circle = {},
+        medianW = vHomeCanvas.width / CIRCLES_DENSITY,
+        medianH = vRoot.offsetHeight / CIRCLES_DENSITY,
+        widthIndex = vHomeCircles.length,
+        heightIndex;
+
+    while(true){
+        heightIndex = random(0, CIRCLES_DENSITY);
+
+        if(!~vCirclesUsedIndexes.indexOf(heightIndex)){
+            vCirclesUsedIndexes.push(heightIndex);
+            break;
+        }
+    }
+
+    circle.color = CIRCLES_COLORS[Math.floor(random(0, CIRCLES_COLORS.length))];
+    circle.size = random(vCirclesFactor / 2, vCirclesFactor);
+    circle.transparency = random(0.1, 0.3);
+
+    circle.last = { x: 0, y: 0 };
+    circle.position = {};
+    circle.position.x = random(medianW * widthIndex, medianW * (widthIndex + 1));
+    circle.position.y = random(medianH * heightIndex, medianH * (heightIndex + 1));
+
+    vHomeCircles.push(circle);
+}
+
+function homeCanvasRender(){
+    let circle,
+        context = vHomeContext;
+
+    context.clearRect(0, 0, vHomeCanvas.width, vHomeCanvas.height);
+
+    for(let i in vHomeCircles){
+        circle = vHomeCircles[i];
+
+        let posX = circle.position.x,
+            posY = circle.position.y - vHomeScrolled;
+
+        circle.last.x += (posX - circle.last.x) / CIRCLES_MOVEMENT_FACTOR;
+        circle.last.y += (posY - circle.last.y) / CIRCLES_MOVEMENT_FACTOR;
+
+        context.beginPath();
+        context.arc(circle.last.x, circle.last.y, circle.size, 0, 2 * Math.PI);
+        context.fillStyle = "rgba(" + circle.color.r + ", " + circle.color.g + ", " + circle.color.b + ", " + circle.transparency + ")";
+        context.fill();
+    }
+
+    if(vHomeActive) requestAnimationFrame(homeCanvasRender);
+}
+
+//TO DO
+/*function homeCanvasScroll(){
+    vHomeScrolled = vScrollingElement.scrollTop;
+}*/
+
+function homeCanvasCreate(canvas){
+    //element and listeners
+    vHomeCanvas = canvas;
+    vHomeContext = canvas.getContext("2d");
+
+    homeResize();
+    window.addEventListener("resize", homeResize);
+
+    //create circles
+    vCirclesFactor = (vHomeCanvas.width / 1080) * CIRCLES_SIZE_FACTOR;
+    vHomeCircles = [];
+    vCirclesUsedIndexes = [];
+    for(let i = 0; i < CIRCLES_DENSITY; i++) homeCircleCreate();
+
+    homeCanvasRender();
+}
+
+function homeLoad(){
+    vHomeActive = true;
+
     let parent = createElement("div", null, "home"),
         canvas = createElement("canvas", parent),
-        header = header_create("home", parent),
+        header = headerCreate("home", parent),
         main = createElement("div", parent, "main"),
         about = createElement("div", parent, "about"),
         skills = createElement("div", parent, "skills"),
-        footer = footer_create(parent);
+        footer = footerCreate(parent);
 
     //about disivion elements
     let age = (new Date().getFullYear()) - 2000;
@@ -377,13 +560,13 @@ function home_load(){
         efficiency and minimalism in mind.\
     `;
 
-    desc.innerHTML += genericLink_create(svg("envelope") + " me@smuwn.com", "mailto:me@smuwn.com", "line");
+    desc.innerHTML += createGenericLink(svg("envelope") + " me@smuwn.com", "mailto:me@smuwn.com", "line");
     createElement("div", desc, "line").innerHTML = svg("location") + " Iași, România";
-    desc.innerHTML += genericLink_create(svg("clip") + " Résumé", "/cv.pdf", "line");
+    desc.innerHTML += createGenericLink(svg("clip") + " Résumé", "/cv.pdf", "line");
 
     let socials = createElement("div", desc, "socials");
     createElement("div", socials).innerHTML = "Socials";
-    socials.innerHTML += get_socials();
+    socials.innerHTML += getSocials();
 
     photo.innerHTML = '<img src="/assets/main.jpg">';
     title.innerText = "Hi, I'm Ioan";
@@ -402,11 +585,20 @@ function home_load(){
         <p>^ The "the farthest, the more-suckness" spectrum.</p>
     `;
 
-    //ready
+    //show page
     vRoot.appendChild(parent);
+
+    //after everything was rendered
+    timeout(function(){
+        //create canvas
+        homeCanvasCreate(canvas);
+
+        //moving elements
+        addMovingElements("gauss", [photo]);
+    });
 }
 
-function home_unload(){
+function homeUnload(){
 
 }
 
@@ -455,7 +647,7 @@ function projectHandler(e){
     vProjectParent.classList.add("selected");
     vProjectSelected = target;
 
-    slowdom();
+    redrawDOM();
     vProjectBackgrounds.classList.add("show");
 
     window.removeEventListener("scroll", projectCloseSelected);
@@ -465,12 +657,12 @@ function projectHandler(e){
     
 }
 
-function projects_load(){
+function projectsLoad(){
     let parent = createElement("div", null, "projects"),
         backgrounds = createElement("div", parent, "project-background"),
-        header = header_create("projects", parent),
+        header = headerCreate("projects", parent),
         container = createElement("div", parent, "container"),
-        footer = footer_create(parent);
+        footer = footerCreate(parent);
 
     //container division elements
     let title = createElement("div", container, "title");
@@ -486,7 +678,7 @@ function projects_load(){
         span.innerText = projects[i].name;
         //createElement("span", el).innerText = projects[i].name;
         if(projects[i].background) span.style.backgroundImage = projects[i].background;
-        if(projects[i].url) el.innerHTML += genericLink_create("See the project page " + svg("arrow-right"), projects[i].url, "link");
+        if(projects[i].url) el.innerHTML += createGenericLink("See the project page " + svg("arrow-right"), projects[i].url, "link");
         if(projects[i].description) createElement("div", el, "description").innerText = projects[i].description;
 
         let background = createElement("div");
@@ -502,32 +694,41 @@ function projects_load(){
     
     //ready
     vRoot.appendChild(parent);
+
+    timeout(function(){
+        addMovingElements("gauss", vProjectsArray);
+    });
 }
 
-function projects_unload(){
+function projectsUnload(){
 
 }
 
-function util_changeState(e){
+function utilChangeState(e){
 
 }
 
-function util_dom(){
+function utilDom(){
     vRoot = document.querySelector(".root");
     vScrollingElement = document.scrollingElement || document.documentElement;
     vRoot.addEventListener("wheel", smoothWheel);
     getFrameRate();
+    createBlurSVG();
+
     //TODO
-    if(~location.href.indexOf("projects")) projects_load();
-    else home_load();
+    if(~location.href.indexOf("projects")) projectsLoad();
+    else homeLoad();
+
+    window.addEventListener("scroll", movingElements, {passive: true});
 }
 
-function util_load(){
+function utilLoad(){
     if("scrollRestoration" in history){
         history.scrollRestoration = "manual";
     }
+
 }
 
-window.addEventListener("load", util_load);
-document.addEventListener("DOMContentLoaded", util_dom);
-window.addEventListener("popstate", util_changeState);
+window.addEventListener("load", utilLoad);
+document.addEventListener("DOMContentLoaded", utilDom);
+window.addEventListener("popstate", utilChangeState);
