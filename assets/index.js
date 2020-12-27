@@ -229,7 +229,7 @@ function smoothScrollTo(yPos, duration = 1000, callback){
         //else console.log(Math.abs(vScrollingElement.scrollTop - yPos), time, startPos, yPos);
 
         requestAnimationFrame(scrolling);
-    }
+    } 
     scrolling();
 }
 
