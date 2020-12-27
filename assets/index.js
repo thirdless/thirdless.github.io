@@ -229,7 +229,8 @@ function smoothScrollTo(yPos, duration = 1000, callback){
         //else console.log(Math.abs(vScrollingElement.scrollTop - yPos), time, startPos, yPos);
 
         requestAnimationFrame(scrolling);
-    } 
+    }
+
     scrolling();
 }
 
@@ -379,7 +380,7 @@ function blurElements(scroll){
     clearTimeout(vBlurTimeout);
     vBlurTimeout = timeout(function(){
         setBlurAmount(0);
-    }, 100);
+    });
 
     vBlurLastScroll = scroll;
 }
@@ -407,17 +408,25 @@ function addMovingElements(type, elements){
     if(elements instanceof Node) elements = [elements];
 
     for(let i = 0; i < elements.length; i++){
-        vGaussianMovement.push({
-            element: elements[i],
-            top: elements[i].getBoundingClientRect().top,
-            height: elements[i].offsetHeight
-        });
+        if(type == "gauss"){
+            vGaussianMovement.push({
+                element: elements[i],
+                top: elements[i].getBoundingClientRect().top,
+                height: elements[i].offsetHeight
+            });
+        }
+        else if(type == "blur"){
+            elements[i].style.filter = "url(#motionBlur)";
+        }
     }
 
-    gaussianMovement(vScrollingElement.scrollTop);
+    if(type == "gauss"){
+        gaussianMovement(vScrollingElement.scrollTop);
+    }
 }
 
 function clearMovingElements(){
+    //TO DO mutiple choices except blur cuz css clears anyway when reset
     vGaussianMovement = [];
 }
 
@@ -595,6 +604,7 @@ function homeLoad(){
 
         //moving elements
         addMovingElements("gauss", [photo]);
+        addMovingElements("blur", [main, about, skills]);
     });
 }
 
@@ -696,7 +706,7 @@ function projectsLoad(){
     vRoot.appendChild(parent);
 
     timeout(function(){
-        addMovingElements("gauss", vProjectsArray);
+        addMovingElements("blur", vProjectsArray);
     });
 }
 
