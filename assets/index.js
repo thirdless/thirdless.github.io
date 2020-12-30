@@ -52,7 +52,7 @@ let svgs = {
         view: "0 0 24 24",
         path: '<path d="M8 18c0 0.553-0.223 1.051-0.586 1.414s-0.861 0.586-1.414 0.586-1.051-0.223-1.414-0.586-0.586-0.861-0.586-1.414 0.223-1.051 0.586-1.414 0.861-0.586 1.414-0.586 1.051 0.223 1.414 0.586 0.586 0.861 0.586 1.414zM22 16v-13c0-0.050-0.004-0.107-0.014-0.164-0.091-0.545-0.606-0.913-1.151-0.822l-12 2c-0.476 0.081-0.835 0.492-0.835 0.986v9.535c-0.588-0.34-1.272-0.535-2-0.535-1.104 0-2.106 0.449-2.828 1.172s-1.172 1.724-1.172 2.828 0.449 2.106 1.172 2.828 1.724 1.172 2.828 1.172 2.106-0.449 2.828-1.172 1.172-1.724 1.172-2.828v-12.153l10-1.667v8.355c-0.588-0.34-1.272-0.535-2-0.535-1.104 0-2.106 0.449-2.828 1.172s-1.172 1.724-1.172 2.828 0.449 2.106 1.172 2.828 1.724 1.172 2.828 1.172 2.106-0.449 2.828-1.172 1.172-1.724 1.172-2.828zM20 16c0 0.553-0.223 1.051-0.586 1.414s-0.861 0.586-1.414 0.586-1.051-0.223-1.414-0.586-0.586-0.861-0.586-1.414 0.223-1.051 0.586-1.414 0.861-0.586 1.414-0.586 1.051 0.223 1.414 0.586 0.586 0.861 0.586 1.414z"></path>'
     },
-    "envelope":{ 
+    "envelope":{
         view: "0 0 28 28",
         path: '<path d="M27.563 0.172c0.328 0.234 0.484 0.609 0.422 1l-4 24c-0.047 0.297-0.234 0.547-0.5 0.703-0.141 0.078-0.313 0.125-0.484 0.125-0.125 0-0.25-0.031-0.375-0.078l-7.078-2.891-3.781 4.609c-0.187 0.234-0.469 0.359-0.766 0.359-0.109 0-0.234-0.016-0.344-0.063-0.391-0.141-0.656-0.516-0.656-0.938v-5.453l13.5-16.547-16.703 14.453-6.172-2.531c-0.359-0.141-0.594-0.469-0.625-0.859-0.016-0.375 0.172-0.734 0.5-0.922l26-15c0.156-0.094 0.328-0.141 0.5-0.141 0.203 0 0.406 0.063 0.562 0.172z"></path>'
     },
@@ -327,107 +327,86 @@ function footerCreate(parent){
     return element;
 }
 
-let blurElement;
-
-function createBlurSVG(){
-    let namespace = "http://www.w3.org/2000/svg",
-        create = type => document.createElementNS(namespace, type),
-        svg = create("svg"),
-        defs = create("defs"),
-        filter = create("filter"),
-        blur = create("feGaussianBlur");
-
-
-    svg.appendChild(defs);
-    defs.appendChild(filter);
-    filter.appendChild(blur);
-
-    filter.setAttribute("id", "motionBlur");
-    blur.setAttribute("in", "SourceGraphic");
-    blur.setAttribute("stdDeviation", "0,0");
-
-    blurElement = blur;
-    vRoot.appendChild(svg);
-}
-
-function setBlurAmount(value){
-    blurElement.setAttribute("stdDeviation", "0," + value);
-}
-
 let vRoot,
     vScrollingElement,
     vHomeActive = false,
     vProjectsActive = false;
 
-function movingElements(){
+let vIntersectionObserver,
+    vIntersectionObserverActive = false,
+    vIntersectionObserverThreshold = 0.5,
+    vIntersectionObserverClass = "viewportActive",
+    vViewportElements = [];
+
+function addViewportElements(elements){
+    if(elements instanceof Node) elements = [elements];
+
+    if(!vIntersectionObserverActive){
+        vIntersectionObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if(entry.intersectionRatio >= vIntersectionObserverThreshold) entry.target.classList.add(vIntersectionObserverClass);
+                else entry.target.classList.remove(vIntersectionObserverClass);
+            });
+        }, {threshold: vIntersectionObserverThreshold});
+
+        vIntersectionObserverActive = true;
+    }
+
+    for(let i = 0; i < elements.length; i++){
+        vIntersectionObserver.observe(elements[i]);
+        vViewportElements.push(elements[i]);
+    }
+}
+
+function removeViewportElements(){
+   for(let i = 0; i < vViewportElements.length; i++){
+        vIntersectionObserver.unobserve(vViewportElements[i]);
+    }
+
+    vViewportElements = [];
+}
+
+function homeScroll(){
     let scroll = vScrollingElement.scrollTop;
 
-    gaussianMovement(scroll);
-    blurElements(scroll);
+    timeout(function(){
+        vHomeScrolled = scroll;
 
-    if(vHomeActive) vHomeScrolled = scroll;
+        movingElements();
+    }, 50);
 }
 
-let vBlurLastScroll = 0,
-    vBlurTimeout = 0;
+let vMovingElements = [];
 
-function blurElements(scroll){
-    let MULTIPLIER = 1,
-        value = Math.abs((vBlurLastScroll - scroll) * MULTIPLIER);
-
-    setBlurAmount(value);
-
-    clearTimeout(vBlurTimeout);
-    vBlurTimeout = timeout(function(){
-        setBlurAmount(0);
-    });
-
-    vBlurLastScroll = scroll;
-}
-
-let vGaussianMovement = [];
-
-function gaussianMovement(scroll){
+function movingElements(){
     let elementPos,
         screen = window.innerHeight,
-        range = 0.3 * screen,
+        //range = 0.3 * screen,
         current;
 
-    for(let i = 0; i < vGaussianMovement.length; i++){
-        current = vGaussianMovement[i];
+    for(let i = 0; i < vMovingElements.length; i++){
+        current = vMovingElements[i];
 
         //elementPos = Math.max(Math.min(linearMap(current.top - scroll, screen, -current.height, range, -range), range), -range);
-        elementPos = scroll - current.top + (screen - current.height) / 2;
-        elementPos *= -.3;
+        elementPos = vHomeScrolled - current.top + (screen - current.height) / 2;
+        elementPos *= -.2;
 
         current.element.style.transform = "translate(0px, " + elementPos + "px)";
     }
 }
 
-function addMovingElements(type, elements){
+function addMovingElements(elements){
     if(elements instanceof Node) elements = [elements];
 
     for(let i = 0; i < elements.length; i++){
-        if(type == "gauss"){
-            vGaussianMovement.push({
-                element: elements[i],
-                top: elements[i].getBoundingClientRect().top,
-                height: elements[i].offsetHeight
-            });
-        }
-        else if(type == "blur"){
-            elements[i].style.filter = "url(#motionBlur)";
-        }
+        vMovingElements.push({
+            element: elements[i],
+            top: elements[i].getBoundingClientRect().top,
+            height: elements[i].offsetHeight
+        });
     }
 
-    if(type == "gauss"){
-        gaussianMovement(vScrollingElement.scrollTop);
-    }
-}
-
-function clearMovingElements(){
-    //TO DO mutiple choices except blur cuz css clears anyway when reset
-    vGaussianMovement = [];
+    movingElements(vScrollingElement.scrollTop);
 }
 
 let CIRCLES_DENSITY = 25,
@@ -589,10 +568,9 @@ function homeLoad(){
         element.innerText = key;
     }
 
-    skillsList.innerHTML += `
-        <div class="spectrum"></div>
-        <p>^ The "the farthest, the more-suckness" spectrum.</p>
-    `;
+    createElement("div", skillsList, "spectrum");
+    createElement("p", skillsList).innerText = '^ The "the farthest, the more-suckness" spectrum.';
+
 
     //show page
     vRoot.appendChild(parent);
@@ -603,8 +581,11 @@ function homeLoad(){
         homeCanvasCreate(canvas);
 
         //moving elements
-        addMovingElements("gauss", [photo]);
-        addMovingElements("blur", [main, about, skills]);
+        vMovingElements = []; //clear vector
+        addMovingElements([photo]);
+        addViewportElements([title, text, socials, about, skills]);
+
+        window.addEventListener("scroll", homeScroll, {passive: true});
     });
 }
 
@@ -620,8 +601,6 @@ let vProjectParent,
     vProjectsArray;
 
 function projectCloseSelected(e){
-    //TO DO
-    console.log(e);
     if(!e || vProjectSelected != null){
         window.removeEventListener("scroll", projectCloseSelected);
         vProjectBackgrounds.classList.remove("show");
@@ -684,9 +663,9 @@ function projectsLoad(){
     for(let i = 0; i < projects.length; i++){
         let el = createElement("div", container, "project");
         el.innerText = projects[i].name;
+        createElement("span", el).innerText = projects[i].name;
         let span = createElement("span", el);
         span.innerText = projects[i].name;
-        //createElement("span", el).innerText = projects[i].name;
         if(projects[i].background) span.style.backgroundImage = projects[i].background;
         if(projects[i].url) el.innerHTML += createGenericLink("See the project page " + svg("arrow-right"), projects[i].url, "link");
         if(projects[i].description) createElement("div", el, "description").innerText = projects[i].description;
@@ -705,8 +684,9 @@ function projectsLoad(){
     //ready
     vRoot.appendChild(parent);
 
+    //after redraw
     timeout(function(){
-        addMovingElements("blur", vProjectsArray);
+        addViewportElements(vProjectsArray);
     });
 }
 
@@ -723,20 +703,17 @@ function utilDom(){
     vScrollingElement = document.scrollingElement || document.documentElement;
     vRoot.addEventListener("wheel", smoothWheel);
     getFrameRate();
-    createBlurSVG();
 
     //TODO
     if(~location.href.indexOf("projects")) projectsLoad();
     else homeLoad();
-
-    window.addEventListener("scroll", movingElements, {passive: true});
 }
 
 function utilLoad(){
     if("scrollRestoration" in history){
         history.scrollRestoration = "manual";
     }
- 
+
 }
 
 window.addEventListener("load", utilLoad);
