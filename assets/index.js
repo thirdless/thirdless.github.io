@@ -23,7 +23,7 @@ let projects = [
         url: "http://host.smuwn.com",
         description: "Mini forum/blog project for university, includes profiles, formattable posts, comments and admin solutions.",
         background: "linear-gradient(to right, #8360c3, #2ebf91)"
-    },
+    }, 
     {
         name: "smuwnware",
         url: "http://github.com/smuwn/smuwnware",
