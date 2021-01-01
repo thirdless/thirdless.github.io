@@ -43,6 +43,21 @@ let skillSet = {
     "Matlab": "b", "Joomla": "b", "Wordpress": "b"
 };
 
+let musicList = [
+    {
+        name: "lil jeep",
+        url: "/music/lil jeep.mp3"
+    },
+    {
+        name: "i mean it",
+        url: "/music/i mean it.mp3"
+    },
+    {
+        name: "gym class",
+        url: "/music/gym class.mp3"
+    },
+];
+
 let svgs = {
     "logo-big":{
         view: "0 0 104 32",
@@ -84,6 +99,14 @@ let svgs = {
         view: "0 0 32 32",
         path: '<path d="M19.414 27.414l10-10c0.781-0.781 0.781-2.047 0-2.828l-10-10c-0.781-0.781-2.047-0.781-2.828 0s-0.781 2.047 0 2.828l6.586 6.586h-19.172c-1.105 0-2 0.895-2 2s0.895 2 2 2h19.172l-6.586 6.586c-0.39 0.39-0.586 0.902-0.586 1.414s0.195 1.024 0.586 1.414c0.781 0.781 2.047 0.781 2.828 0z"></path>'
     },
+    "info":{
+        view: "0 0 24 24",
+        path: '<path d="M14.234 16.014l0.554-1.104c0.808-1.61 0.897-3.228 0.253-4.552-0.122-0.252-0.277-0.479-0.443-0.693 1.411-0.619 2.402-2.026 2.402-3.664 0-2.206-1.794-4-4-4s-4 1.794-4 4c0 0.783 0.234 1.508 0.624 2.126-1.696 0.33-2.806 1.248-2.947 1.375-0.716 0.631-0.885 1.68-0.405 2.504 0.324 0.559 0.886 0.909 1.494 0.98l-0.554 1.104c-0.808 1.61-0.897 3.228-0.254 4.552 0.565 1.164 1.621 1.955 2.972 2.229 0.413 0.084 0.836 0.127 1.254 0.127 2.368 0 3.965-1.347 4.14-1.501 0.716-0.63 0.887-1.678 0.407-2.503-0.325-0.556-0.887-0.909-1.497-0.98zM13 4.001c1.104 0 2 0.896 2 2s-0.896 2-2 2c-1.105 0-2-0.896-2-2s0.895-2 2-2zM11.184 19c-0.271 0-0.559-0.025-0.854-0.087-1.642-0.334-2.328-1.933-1.328-3.927l1-1.995c0.5-0.996 0.47-1.63-0.108-2.035-0.181-0.125-0.431-0.169-0.689-0.169-0.577 0-1.201 0.214-1.201 0.214s1.133-1.001 2.812-1.001c0.271 0 0.56 0.025 0.856 0.087 1.64 0.334 2.328 1.933 1.328 3.927l-1 1.993c-0.5 0.998-0.472 1.632 0.106 2.035 0.181 0.126 0.433 0.169 0.692 0.169 0.577 0 1.2-0.212 1.2-0.212s-1.133 1.001-2.814 1.001z"></path>'
+    },
+    "briefcase":{
+        view: "0 0 24 24",
+        path: '<path d="M9 6v-1c0-0.276 0.111-0.525 0.293-0.707s0.431-0.293 0.707-0.293h4c0.276 0 0.525 0.111 0.707 0.293s0.293 0.431 0.293 0.707v1zM9 20v-12h6v12zM7 8v12h-3c-0.276 0-0.525-0.111-0.707-0.293s-0.293-0.431-0.293-0.707v-10c0-0.276 0.111-0.525 0.293-0.707s0.431-0.293 0.707-0.293zM17 6v-1c0-0.828-0.337-1.58-0.879-2.121s-1.293-0.879-2.121-0.879h-4c-0.828 0-1.58 0.337-2.121 0.879s-0.879 1.293-0.879 2.121v1h-3c-0.828 0-1.58 0.337-2.121 0.879s-0.879 1.293-0.879 2.121v10c0 0.828 0.337 1.58 0.879 2.121s1.293 0.879 2.121 0.879h16c0.828 0 1.58-0.337 2.121-0.879s0.879-1.293 0.879-2.121v-10c0-0.828-0.337-1.58-0.879-2.121s-1.293-0.879-2.121-0.879zM17 20v-12h3c0.276 0 0.525 0.111 0.707 0.293s0.293 0.431 0.293 0.707v10c0 0.276-0.111 0.525-0.293 0.707s-0.431 0.293-0.707 0.293z"></path>'
+    },
 };
 
 let vFrameDuration;
@@ -105,6 +128,24 @@ function timeout(func, duration){
     return setTimeout(func, duration);
 }
 
+function trimChar(string, char){
+    while(string.charAt(0) == char) string = string.substring(1);
+    while(string.charAt(string.length - 1) == char) string = string.substring(0, string.length - 1);
+
+    return string;
+}
+
+function shuffle(e){
+    let j, x, a = e;
+    for(let i = e.length - 1; i > 0; i--){
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
+}
+
 function random(a, b){
     return Math.random() * (b - a) + a;
 }
@@ -117,13 +158,13 @@ function bezier(p1x, p1y, p2x, p2y){
         cy = 3.0 * p1y,
         by = 3.0 * (p2y - p1y) - cy,
         ay = 1.0 - cy - by,
-        sampleCurveX = function(t) {
+        sampleCurveX = t => {
             return ((ax * t + bx) * t + cx) * t;
         },
-        sampleCurveY = function(t) {
+        sampleCurveY = t => {
             return ((ay * t + by) * t + cy) * t;
         },
-        sampleCurveDerivativeX = function(t) {
+        sampleCurveDerivativeX = t => {
             return (3.0 * ax * t + 2.0 * bx) * t + cx;
         };
 
@@ -163,7 +204,7 @@ function bezier(p1x, p1y, p2x, p2y){
         return sampleCurveY(solveCurveX(x));
     }
 
-    return function(x){
+    return x => {
         return solve(x);
     };
 }
@@ -180,6 +221,14 @@ function createElement(type = "div", parent, className){
     if(className != null) div.className = className;
     
     return div;
+}
+
+function toElement(text, parent){
+    let div = createElement();
+    div.innerHTML = text;
+    let find = div.querySelector("div>*:first-of-type");
+    if(parent instanceof Node) parent.appendChild(find);
+    return find;
 }
 
 function svg(id, asElement){
@@ -221,7 +270,7 @@ function smoothScrollTo(yPos, duration = 1000, callback){
 
         if(Math.abs(vScrollingElement.scrollTop - yPos) < 1){
             vScrollingFunctionActive = false;
-            timeout(function(){
+            timeout(() => {
                 if(typeof callback === "function") callback();
             });
             return;
@@ -247,20 +296,24 @@ function smoothWheel(e){
 
 function createGenericSocial(name, link, className){
     let el = createElement("a");
-    el.href = link;
+    //el.href = link;
+    el.setAttribute("data-href", link);
     el.className = "generic-social";
     el.innerHTML = svg(name);
+    el.target = "_blank";
 
     if(className != null) el.className += " " + className;
 
     return el.outerHTML;
 }
 
-function createGenericLink(text, link, className){
+function createGenericLink(text, link, className, newTab){
     let el = createElement("a");
-    el.href = link;
+    // el.href = link;
+    el.setAttribute("data-href", link);
     el.className = "generic-link";
     el.innerHTML = text;
+    if(newTab) el.target = "_blank";
 
     if(className != null) el.className += " " + className;
 
@@ -272,15 +325,12 @@ function headerCreate(page, parent){
     let element = createElement("div", parent, "header"),
         link;
 
-    if(page == "home") link = createGenericLink("Projects", "/projects");
-    else link = createGenericLink("About", "/");
+    if(page == "home") link = createGenericLink(svg("briefcase") + " Projects", "/projects");
+    else link = createGenericLink(svg("info") + "About", "/");
 
     let content = `
         <div class="logo">${svg("logo-big")}</div>
         <div class="menu">
-            <div class="sound">
-                ${svg("music")}
-            </div>
             ${link}
         </div>
     `;
@@ -307,7 +357,7 @@ function footerCreate(parent){
                     <div class="logo">${svg("logo-big")}</div>
                     <div class="info">
                         <p>Ioan Macovei</p>
-                        <p>Made with ♡ in Romania in MMXX</p>
+                        <p>Made with ♡ in Romania</p>
                     </div>
                 </div>
                 <div class="right">
@@ -327,6 +377,107 @@ function footerCreate(parent){
     return element;
 }
 
+function revealCreate(direction){
+    // dir = 0 - down
+    //     = 1 - up
+    let div = createElement();
+    div.className = "reveal-frame";
+
+    if(!direction) div.classList.add("center");
+    else div.classList.add("up");
+
+    document.body.appendChild(div);
+
+    timeout(() => {
+        document.body.removeChild(div);
+    }, 600);
+}
+
+let vMusicObject = null,
+    vMusicPlaylist = null,
+    vMusicCurrent = -1,
+    vMusicPlaying = false,
+    vMusicString = "music",
+    vMusicLastPressed = [],
+    vMusicStorage = "_idk_";
+
+function musicActivate(e){
+    vMusicLastPressed.push(e.code.toLowerCase().replace("key", ""));
+
+    for(let i = 0; i < vMusicLastPressed.length; i++){
+        if(vMusicString.charAt(i) != vMusicLastPressed[i]){
+            vMusicLastPressed = [];
+            break;
+        }
+
+        if(vMusicLastPressed.length == vMusicString.length){
+            document.removeEventListener("keydown", musicActivate);
+            localStorage.setItem(vMusicStorage, "something");
+            musicCreate();
+            break;
+        }
+    };
+}
+
+function musicNext(){
+    vMusicCurrent++;
+    if(vMusicCurrent == vMusicPlaylist.length) vMusicCurrent = 0;
+    vMusicObject.src = vMusicPlaylist[vMusicCurrent].url;
+    vMusicObject.load();
+    if(vMusicPlaying) vMusicObject.play();
+    else vMusicObject.pause();
+}
+
+function musicInit(element){
+    if(vMusicObject === null){
+        vMusicPlaylist = shuffle(musicList);
+        vMusicCurrent = 0;
+
+        vMusicObject = new Audio();
+        vMusicObject.volume = .3;
+        vMusicObject.src = vMusicPlaylist[vMusicCurrent].url;
+        vMusicObject.load();
+
+        vMusicObject.addEventListener("ended", musicNext);
+    }
+
+    if(vMusicPlaying) element.classList.remove("off");
+}
+
+function musicToggle(e){
+    let target = e.currentTarget,
+        offName = "off";
+
+    if(target.classList.contains(offName)){
+        vMusicObject.play();
+        target.classList.remove(offName);
+    }
+    else{
+        vMusicObject.pause();
+        target.classList.add(offName);
+    }
+
+    vMusicPlaying = !vMusicPlaying;
+}
+
+function musicCreate(parent){
+
+    let element = createElement("div", vRoot, "music-element off");
+    element.innerHTML = `
+        <div class="button">
+            ${svg("music")}
+        </div>
+    `;
+
+    musicInit(element);
+
+    element.addEventListener("click", musicToggle);
+
+    timeout(() => {
+        element.classList.add("show");
+    });
+}
+
 let vRoot,
     vScrollingElement,
     vHomeActive = false,
@@ -334,7 +485,7 @@ let vRoot,
 
 let vIntersectionObserver,
     vIntersectionObserverActive = false,
-    vIntersectionObserverThreshold = 0.5,
+    vIntersectionObserverThreshold = 0.05,
     vIntersectionObserverClass = "viewportActive",
     vViewportElements = [];
 
@@ -366,16 +517,6 @@ function removeViewportElements(){
     vViewportElements = [];
 }
 
-function homeScroll(){
-    let scroll = vScrollingElement.scrollTop;
-
-    timeout(function(){
-        vHomeScrolled = scroll;
-
-        movingElements();
-    }, 50);
-}
-
 let vMovingElements = [];
 
 function movingElements(){
@@ -399,14 +540,17 @@ function addMovingElements(elements){
     if(elements instanceof Node) elements = [elements];
 
     for(let i = 0; i < elements.length; i++){
+        let bounding = elements[i].getBoundingClientRect();
         vMovingElements.push({
             element: elements[i],
-            top: elements[i].getBoundingClientRect().top,
-            height: elements[i].offsetHeight
+            top: bounding.top,
+            height: bounding.height
         });
+
+        elements[i].style.willChange = "transform";
     }
 
-    movingElements(vScrollingElement.scrollTop);
+    movingElements();
 }
 
 let CIRCLES_DENSITY = 25,
@@ -425,11 +569,52 @@ let vHomeCanvas,
     vHomeCircles,
     vHomeScrolled = 0,
     vCirclesFactor,
-    vCirclesUsedIndexes;
+    vCirclesUsedIndexes,
+    vHomeParent;
+
+function homeScroll(){
+    let scroll = vScrollingElement.scrollTop;
+
+    timeout(() => {
+        vHomeScrolled = scroll;
+
+        movingElements();
+    }, 50);
+}
+
+vHomeResizeTimeout = null;
 
 function homeResize(){
     vHomeCanvas.width = window.innerWidth;
     vHomeCanvas.height = window.innerHeight;
+
+    if(typeof vHomeResizeTimeout === "number") clearTimeout(vHomeResizeTimeout);
+    vHomeResizeTimeout = timeout(() => {
+        // for(let i = 0; i < vHomeCircles.length; i++){
+        //     vHomeCircles[i].position.x = (vHomeCircles[i].position.x * vHomeCanvas.width) / vLastCanvas.w;
+        //     vHomeCircles[i].position.y = (vHomeCircles[i].position.y * vHomeCanvas.height) / vLastCanvas.h;
+        //     vHomeCircles[i].size = (vHomeCircles[i].size * vHomeCanvas.width) / vLastCanvas.w;
+        // }
+
+        // vLastCanvas.x = vHomeCanvas.width;
+        // vLastCanvas.h = vHomeCanvas.height;
+
+        for(let i = 0; i < vMovingElements.length; i++){
+            let transform = vMovingElements[i].element.style.transform;
+            vMovingElements[i].element.style.transform = "";
+            let bounding = vMovingElements[i].element.getBoundingClientRect();
+            vMovingElements[i].top = bounding.top;
+            vMovingElements[i].height = bounding.height;
+            vMovingElements[i].element.style.transform = transform;
+        }
+
+        let text = document.querySelector(".text"),
+            about = document.querySelector(".about"),
+            desc = document.querySelector(".desc"),
+            skills = document.querySelector(".skills>div");
+
+        homeCreateTextLines(text, about, desc, skills);
+    }, 300);
 }
 
 function homeCircleCreate(){
@@ -506,6 +691,93 @@ function homeCanvasCreate(canvas){
     homeCanvasRender();
 }
 
+let vTransitionDelayName = "--transition-time";
+
+function homeTextLines(element, addDelay, padding = 0){
+    let words = element.innerText.split(" "),
+        lines = [],
+        height,
+        start,
+        columns = window.getComputedStyle(element).getPropertyValue("column-count");
+
+    if(columns != "auto"){
+        columns = parseInt(columns);
+
+        let gap = window.getComputedStyle(element).getPropertyValue("column-gap");
+
+        if(gap != "normal") gap = parseInt(gap) / columns;
+        else gap = 0;
+
+        element.style.paddingRight = gap + "px";
+        element.style.width = (100 / columns) + "%";
+        element.style.columnCount = "initial";
+        element.style.columnGap = "initial";
+        element.style.boxSizing = "border-box";
+    }
+
+    element.style.visibility = "hidden";
+    element.innerHTML = words[0];
+    height = element.getBoundingClientRect().height;
+    start = 0;
+
+    for(let i = 1; i < words.length; i++){
+        element.innerHTML += " " + words[i];
+        
+        if(height < element.getBoundingClientRect().height){
+            lines.push(words.slice(start, i).join(" "));
+
+            height = element.getBoundingClientRect().height;
+            start = i;
+        }
+    }
+
+    lines.push(words.slice(start, words.length).join(" ")); //last line
+    element.innerHTML = "";
+
+    for(let i = 0; i < lines.length; i++){
+        let container = createElement("span", element, "line");
+        container.innerText = lines[i] + " ";
+        if(addDelay) container.style.setProperty(vTransitionDelayName, i * addDelay + padding + "s");
+    }
+
+    element.removeAttribute("style");
+
+}
+
+function descTransitions(container, delay, padding = 0){
+    //find the last text transition
+    let elements = container.children,
+        last_line = elements[0].querySelector(".line:last-of-type"),
+        last_delay = parseFloat(last_line.style.getPropertyValue(vTransitionDelayName));
+
+    for(let i = 1; i < elements.length; i++){
+        elements[i].style.setProperty(vTransitionDelayName, last_delay + (i * delay) + padding + "s");
+    }
+}
+
+function skillsTransitions(container, delay, padding = 0){
+    let ELEMENTS_SPLIT = 3;
+    let elements = container.children;
+
+    for(let i = 0; i < elements.length / ELEMENTS_SPLIT; i++){
+        for(let j = 0; j < ELEMENTS_SPLIT; j++){
+            let index = i * ELEMENTS_SPLIT + j,
+                current = elements[index];
+            
+            if(current) current.style.setProperty(vTransitionDelayName, delay * i + padding + "s");
+        }
+    }
+}
+
+function homeCreateTextLines(text, about, desc, skillsList){
+    let TRANSITION_DELAY = 0.075;
+
+    homeTextLines(text, TRANSITION_DELAY);
+    descTransitions(desc, TRANSITION_DELAY);
+    homeTextLines(about, TRANSITION_DELAY);
+    skillsTransitions(skillsList, TRANSITION_DELAY, 0.25);
+}
+
 function homeLoad(){
     vHomeActive = true;
 
@@ -548,9 +820,9 @@ function homeLoad(){
         efficiency and minimalism in mind.\
     `;
 
-    desc.innerHTML += createGenericLink(svg("envelope") + " me@smuwn.com", "mailto:me@smuwn.com", "line");
+    toElement(createGenericLink(svg("envelope") + " me@smuwn.com", "mailto:me@smuwn.com", "line"), desc);
     createElement("div", desc, "line").innerHTML = svg("location") + " Iași, România";
-    desc.innerHTML += createGenericLink(svg("clip") + " Résumé", "/cv.pdf", "line");
+    toElement(createGenericLink(svg("clip") + " Résumé", "/cv.pdf", "line", true), desc);
 
     let socials = createElement("div", desc, "socials");
     createElement("div", socials).innerHTML = "Socials";
@@ -573,24 +845,36 @@ function homeLoad(){
 
 
     //show page
+    vHomeParent = parent;
     vRoot.appendChild(parent);
 
     //after everything was rendered
-    timeout(function(){
+    timeout(() => {
         //create canvas
         homeCanvasCreate(canvas);
+
+        //text lines
+        homeCreateTextLines(text, about, desc, skillsList);
 
         //moving elements
         vMovingElements = []; //clear vector
         addMovingElements([photo]);
-        addViewportElements([title, text, socials, about, skills]);
+        addViewportElements([desc, about, skills]);
 
         window.addEventListener("scroll", homeScroll, {passive: true});
     });
 }
 
 function homeUnload(){
+    vHomeActive = false;
 
+    window.removeEventListener("resize", homeResize);
+    vMovingElements = [];
+    removeViewportElements();
+
+    window.removeEventListener("scroll", homeScroll, {passive: true});
+
+    vRoot.removeChild(vHomeParent);
 }
 
 let vProjectParent,
@@ -627,6 +911,8 @@ function projectHandler(e){
 
         target = target.parentNode;
     }
+
+    if(vScrollingFunctionActive) return;
 
     let background = vProjectBackgroundsArray[vProjectsArray.indexOf(target)];
     if(background.style.backgroundImage) vProjectBackgrounds.style.backgroundImage = background.style.backgroundImage;
@@ -667,10 +953,10 @@ function projectsLoad(){
         let span = createElement("span", el);
         span.innerText = projects[i].name;
         if(projects[i].background) span.style.backgroundImage = projects[i].background;
-        if(projects[i].url) el.innerHTML += createGenericLink("See the project page " + svg("arrow-right"), projects[i].url, "link");
+        if(projects[i].url) el.innerHTML += createGenericLink("See the project page " + svg("arrow-right"), projects[i].url, "link", true);
         if(projects[i].description) createElement("div", el, "description").innerText = projects[i].description;
 
-        let background = createElement("div");
+        let background = createElement();
         if(projects[i].background) background.style.backgroundImage = projects[i].background;
         vProjectsArray.push(el);
         vProjectBackgroundsArray.push(background);
@@ -685,16 +971,109 @@ function projectsLoad(){
     vRoot.appendChild(parent);
 
     //after redraw
-    timeout(function(){
+    timeout(() => {
         addViewportElements(vProjectsArray);
     });
 }
 
 function projectsUnload(){
+    removeViewportElements();
+    vRoot.removeEventListener("click", projectHandler);
+    vRoot.removeChild(vProjectParent);
+}
+
+let vErrorParent;
+
+function errorPageLoad(){
+    let ERROR_CODE = 404;
+
+    let parent = createElement("div", null, "error"),
+        background = createElement("div", parent, "error-background"),
+        content = createElement("div", parent, "content");
+
+    for(let i = 0; i < 8; i++){
+        createElement("span", background).innerText = ERROR_CODE;
+    }
+
+    createElement("h1", content, "heading").innerText = "Oops!";
+    createElement("p", content, "info").innerText = "You've been sent to the abyss --\n this page contains an infinite amount of absolutely nothing. 😕";
+    let link = createElement("a", content, "button");
+    link.href = "/";
+    link.innerText = "Back to homepage";
+
+    vErrorParent = parent;
+
+    vRoot.appendChild(parent);
 
 }
 
+function errorPageUnload(){
+    vRoot.removeChild(vErrorParent);
+}
+
+function utilLinkHandler(e){
+    let current = e.target,
+        link = createElement("a"),
+        sameOrigin = link => {return link.host === location.host && link.protocol === location.protocol};
+
+    e.preventDefault();
+
+    while(true){
+        if(current == e.currentTarget) return;
+        else if(current.tagName == "A"){
+            if(current.getAttribute("data-href")) link.href = current.getAttribute("data-href");
+            else if(current.href) link = current;
+
+            if(sameOrigin(link) && !current.target) break;
+            else if(current.target){
+                window.open(link.href);
+                return;
+            }
+            else{
+                location.href = link.href;
+                return;
+            }
+        }
+
+        current = current.parentNode;
+    }
+
+    utilChangeState(link.href);
+}
+
+let vCurrentPage,
+    vChangingPage = false;
+
 function utilChangeState(e){
+    let link = createElement("a"),
+        pushState = false;
+    
+    if(typeof e === "string"){
+        link.href = e;
+        pushState = true;
+    }
+    else link.href = location.href;
+
+    if(vCurrentPage == "home") homeUnload();
+    else if(vCurrentPage == "projects") projectsUnload();
+    else if(vCurrentPage == "error") errorPageUnload();
+
+    let path = trimChar(link.pathname, "/");
+
+    if(path === "" || path == "about"){
+        vCurrentPage = "home";
+        homeLoad();
+    }
+    else if(path == "projects"){
+        vCurrentPage = "projects";
+        projectsLoad();
+    }
+    else{
+        vCurrentPage = "error";
+        errorPageLoad();
+    }
+
+    if(pushState) history.pushState(null, null, link.pathname);
 
 }
 
@@ -704,9 +1083,10 @@ function utilDom(){
     vRoot.addEventListener("wheel", smoothWheel);
     getFrameRate();
 
-    //TODO
-    if(~location.href.indexOf("projects")) projectsLoad();
-    else homeLoad();
+    vRoot.addEventListener("click", utilLinkHandler);
+    
+    if(localStorage.getItem(vMusicStorage)) musicCreate();
+    else document.addEventListener("keydown", musicActivate);
 }
 
 function utilLoad(){
@@ -714,6 +1094,12 @@ function utilLoad(){
         history.scrollRestoration = "manual";
     }
 
+    //TODO
+    document.fonts.load('1rem "PT Serif"').then(() => {
+        // if(~location.href.indexOf("projects")) projectsLoad();
+        // else homeLoad();
+        utilChangeState(false);
+    });
 }
 
 window.addEventListener("load", utilLoad);
