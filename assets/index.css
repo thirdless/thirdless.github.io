@@ -115,7 +115,7 @@ body::after{background:url(/assets/noise.png);animation:noise .5s steps(5) infin
 .projects .title{-webkit-text-stroke:6px transparent;color:var(--black-color);font-size:3em;font-weight:700;text-transform:uppercase;background-clip:text;-webkit-background-clip:text;background-image:linear-gradient(to right, #30E8BF, #FF8235, #30E8BF);background-size:200%;animation:title 3s linear infinite;}
 .projects .container .project{display:table;font-size:3em;font-weight:700;margin:1em 0;padding-left:.4em;position:relative;cursor:pointer;line-height:1.2em;color:transparent;perspective:1000px;}
 .projects .container .project::before{content:counter(project);counter-increment:project;font-size:.4em;position:absolute;left:0;top:.5em;-webkit-text-stroke:initial;font-weight:normal;color:var(--white-color);transition:opacity .3s ease;opacity:0;}
-.projects .container .project>span{position:absolute;padding-left:inherit;width:100%;left:0;top:0;will-change:transform, opacity;}
+.projects .container .project>span{position:absolute;padding-left:inherit;width:100%;left:0;top:0;will-change:transform, opacity;will-change:transform;}
 .projects .container .project>span:first-of-type{z-index:4;transition:.3s ease;transition-property:-webkit-text-stroke-color, transform, color;-webkit-text-stroke:.5px var(--white-color);color:transparent;transform-origin:center left;}
 .projects .container .project>span:last-of-type{-webkit-background-clip:text;background-clip:text;z-index:5;color:transparent;-webkit-text-stroke:inherit transparent;opacity:0;transition:.3s ease .1s;transition-property:opacity, transform;background-size:cover;transform-origin:top left;transform:translateX(-.25em);background-image:linear-gradient(to right, #eee, #aaa);text-shadow:0 0 .5em var(--shadow-black);}
 .projects .container .project:hover>span:first-of-type{-webkit-text-stroke-color:transparent;}
@@ -139,7 +139,7 @@ body::after{background:url(/assets/noise.png);animation:noise .5s steps(5) infin
 .projects .footer .content, .projects .header, .projects .title, .projects .container .project{transition:opacity .3s ease;}
 .projects.selected .footer .content, .projects.selected .header, .projects.selected .title, .projects.selected .container .project:not(.selected){opacity:.15;pointer-events:none;}
 
-.project-background{position:fixed;top:0;bottom:0;right:0;left:0;z-index:-1;opacity:0;transition:opacity .3s ease;background-size:cover;}
+.project-background{position:fixed;top:0;bottom:0;right:0;left:0;z-index:-1;opacity:0;transition:opacity .3s ease;background-size:cover;will-change:opacity;}
 .project-background.show{opacity:1;}
 .project-background::after{content:"";position:absolute;top:0;bottom:0;right:0;left:0;z-index:10;background:var(--background-overlay);}
 
@@ -156,7 +156,7 @@ body::after{background:url(/assets/noise.png);animation:noise .5s steps(5) infin
 .music-element{position:fixed;bottom:5vh;left:5vh;z-index:1;opacity:0;transition:opacity .3s ease;}
 .music-element.show{opacity:1;}
 .music-element .button{width:1em;height:1em;cursor:pointer;position:relative;}
-.music-element .button::after{content:"";display:block;position:absolute;top:.35em;left:.275em;width:0;height:.2em;border-bottom:.1em solid var(--white-color);box-sizing:border-box;background:var(--black-color);transform:rotate(40deg);transform-origin:top left;transition:width .3s ease;}
+.music-element .button::after{content:"";display:block;position:absolute;top:.35em;left:.275em;width:0;height:.2em;border-bottom:.1em solid var(--white-color);box-sizing:border-box;background:var(--black-color);transform:rotate(40deg);transform-origin:top left;transition:width .3s ease;border-radius:.1em .1em 0 0;}
 .music-element.off .button::after{width:100%;}
 .music-element .button svg{height:100%;width:100%;}
 
