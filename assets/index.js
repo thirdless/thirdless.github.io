@@ -326,7 +326,7 @@ function headerCreate(page, parent){
         link;
 
     if(page == "home") link = createGenericLink(svg("briefcase") + " Projects", "/projects");
-    else link = createGenericLink(svg("info") + "About", "/");
+    else link = createGenericLink(svg("info") + "About", "/about");
 
     let content = `
         <div class="logo">${svg("logo-big")}</div>
