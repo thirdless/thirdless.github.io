@@ -243,12 +243,6 @@ function svg(id, asElement){
     else return div.outerHTML;
 }
 
-function redrawDOM(el){
-    if(!el) el = vRoot;
-    void el.offsetWidth;
-    void el.getBoundingClientRect();
-}
-
 let vScrollingFunctionActive = false;
 
 function smoothScrollTo(yPos, duration = 1000, callback){
@@ -268,7 +262,7 @@ function smoothScrollTo(yPos, duration = 1000, callback){
         
         vScrollingElement.scrollTop = startPos + distance * func;
 
-        if(Math.abs(vScrollingElement.scrollTop - yPos) < 1){
+        if(Math.abs(vScrollingElement.scrollTop - yPos) < 1 || time > 1){
             vScrollingFunctionActive = false;
             timeout(() => {
                 if(typeof callback === "function") callback();
@@ -276,7 +270,6 @@ function smoothScrollTo(yPos, duration = 1000, callback){
             return;
         }
         //else console.log(Math.abs(vScrollingElement.scrollTop - yPos), time, startPos, yPos);
-
         requestAnimationFrame(scrolling);
     }
 
@@ -326,7 +319,7 @@ function headerCreate(page, parent){
         link;
 
     if(page == "home") link = createGenericLink(svg("briefcase") + " Projects", "/projects");
-    else link = createGenericLink(svg("info") + "About", "/about");
+    else link = createGenericLink(svg("info") + "About", "/");
 
     let content = `
         <div class="logo">${svg("logo-big")}</div>
@@ -915,19 +908,21 @@ function projectHandler(e){
     if(vScrollingFunctionActive) return;
 
     let background = vProjectBackgroundsArray[vProjectsArray.indexOf(target)];
-    if(background.style.backgroundImage) vProjectBackgrounds.style.backgroundImage = background.style.backgroundImage;
-    else vProjectBackgrounds.style.backgroundImage = "";
+    // if(background.style.backgroundImage) vProjectBackgrounds.style.backgroundImage = background.style.backgroundImage;
+    // else vProjectBackgrounds.style.backgroundImage = "";
 
     target.classList.add("selected");
     vProjectParent.classList.add("selected");
     vProjectSelected = target;
 
-    redrawDOM();
-    vProjectBackgrounds.classList.add("show");
+    //redrawDOM();
+    timeout(() => {
+        vProjectBackgrounds.classList.add("show");
 
-    window.removeEventListener("scroll", projectCloseSelected);
-    smoothCenterOnElement(target, () => {
-        window.addEventListener("scroll", projectCloseSelected);
+        window.removeEventListener("scroll", projectCloseSelected);
+        smoothCenterOnElement(target, () => {
+            window.addEventListener("scroll", projectCloseSelected);
+        });
     });
     
 }
