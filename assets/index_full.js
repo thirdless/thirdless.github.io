@@ -1,10 +1,28 @@
 //(function(){
 let projects = [
     {
+        name: "Led Matrix Schematic",
+        url: "https://github.com/thirdless/LedMatrix",
+        description: "Display source code and reverse engineered schematic for OKY3525-1 16x16 led matrix and other similar variants",
+        background: "linear-gradient(to right, #56CCF2, #2F80ED)"
+    },
+    {
         name: "Mazzard",
         url: "http://github.com/thirdless/game",
         description: "Mini game made in Java as an university project, with 2 levels, in which a prince needs to regain his throne since the monsters have won the whole kingdom. (idk im not the best storywriter)",
         background: "url(/bg/bgmenu.png)"
+    },
+    {
+        name: "Sift",
+        url: "https://github.com/thirdless/sift",
+        description: "Mini programming e-learning platform, featuring lessons, forum posts and community profiles",
+        background: "url(/bg/sift.png)"
+    },
+    {
+        name: "Office Clock using RaspberryPi",
+        url: "https://www.hackster.io/macovei/office-clock-using-raspberrypi-b2e295",
+        description: "Youtube Music webwrapper with search through playlist functionality, discord integration and more. Since google doesn't want any native desktop app ever.",
+        background: "url(/bg/clock.jpg)"
     },
     {
         name: "YouTube Music Desktop App",
@@ -15,24 +33,17 @@ let projects = [
     {
         name: "Timify",
         url: "http://github.com/thirdless/timify",
-        description: "Easy to use time management javascipt library. From countdowns, time-passed watches and stopwatches, everything is one line away.",
+        description: "Easy to use time management javascipt library. From countdowns, clocks and stopwatches, everything is one line away.",
         background: "url(/bg/timify.jpg)"
     },
     {
-        name: "Dusk",
-        url: "http://host.smuwn.com",
-        description: "Mini forum/blog project for university, includes profiles, formattable posts, comments and admin solutions.",
-        background: "linear-gradient(to right, #8360c3, #2ebf91)"
+        name: "Hoggins",
+        description: "In construction - Customizable first-page, where you can include widgets from reddit and google news posts, to weather widgets and daily themed wallpapers."
     },
     {
         name: "smuwnware",
-        url: "http://github.com/smuwn/smuwnware",
-        description: "Small, fun OS, written in javascript for the browser.",
+        description: "In construction - Small, fun OS, written in javascript for the browser.",
         background: "linear-gradient(to right, #ee0979, #ff6a00)"
-    },
-    {
-        name: "Hoggins",
-        description: "Customizable first-page, where you can include widgets from reddit and google news posts, to weather widgets and daily themed wallpapers."
     }
 ];
 
@@ -40,9 +51,9 @@ let homeImage = "/assets/main.jpg";
 
 let skillSet = {
     "HTML": "g", "CSS": "g", "JS/ES6": "g", "PHP": "g",
-    "MySQL": "g", "Node.JS": "g", "Java": "g", "C/C++": "m",
-    "OracleDB": "m", "Electron": "m", "Python": "m", "ASM x86/x64": "m",
-    "Matlab": "b", "Joomla": "b", "Wordpress": "b"
+    "MySQL": "g", "Node.JS": "g", "Java": "g", "C/C++": "g",
+    "C#": "g", "Python": "g", "OracleDB": "m", "Electron": "m",
+    "ASM x86/x64": "m", "Matlab": "b", "Kotlin": "b"
 };
 
 let musicList = [
