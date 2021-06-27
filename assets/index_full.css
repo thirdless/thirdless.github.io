@@ -63,7 +63,8 @@ html {
 body {
     background: var(--black-color);
     font-family: "PT Serif", sans serif;
-    color: var(--white-color)
+    color: var(--white-color);
+    overflow-x: hidden;
 }
 
 body::before,
