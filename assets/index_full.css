@@ -526,7 +526,6 @@ body::after {
 .projects .container .project>span {
     position: absolute;
     padding-left: inherit;
-    width: 100%;
     left: 0;
     top: 0;
     will-change: transform, opacity;
