@@ -21,7 +21,7 @@ let projects = [
     {
         name: "Office Clock using RaspberryPi",
         url: "https://www.hackster.io/macovei/office-clock-using-raspberrypi-b2e295",
-        description: "Youtube Music webwrapper with search through playlist functionality, discord integration and more. Since google doesn't want any native desktop app ever.",
+        description: "Digital office clock, also displaying interior and exterior temperatures, made with RaspberryPi Zero W and a 16x16 Led Matrix Screen.",
         background: "url(/bg/clock.jpg)"
     },
     {
